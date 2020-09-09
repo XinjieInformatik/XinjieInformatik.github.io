@@ -6,7 +6,7 @@
   <link href="https://xinjieinformatik.github.io/atom.xml" rel="self"/>
   
   <link href="https://xinjieinformatik.github.io/"/>
-  <updated>2020-09-09T01:46:04.012Z</updated>
+  <updated>2020-09-09T00:55:00.179Z</updated>
   <id>https://xinjieinformatik.github.io/</id>
   
   <author>
@@ -15,26 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>newblog</title>
-    <link href="https://xinjieinformatik.github.io/2020/09/09/newblog/"/>
-    <id>https://xinjieinformatik.github.io/2020/09/09/newblog/</id>
-    <published>2020-09-09T01:41:34.000Z</published>
-    <updated>2020-09-09T01:46:04.012Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h2>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;hello-world&quot;&gt;&lt;a href=&quot;#hello-world&quot; class=&quot;headerlink&quot; title=&quot;hello world&quot;&gt;&lt;/a&gt;hello world&lt;/h2&gt;</summary>
-      
-    
-    
-    
-    
-  </entry>
   
   <entry>
     <title>Hello World</title>

@@ -40,6 +40,7 @@
 <li><a href="https://tding.top/archives/58cff12b.html">Hexo-NexT 添加打字特效、鼠标点击特效</a></li>
 <li><a href="https://jrbcode.gitee.io/posts/c13e56cd.html">时钟特效</a></li>
 <li><a href="http://theme-next.iissnan.com/getting-started.html">NexT文档</a></li>
+<li><a href="https://blog.csdn.net/weizhixiang/article/details/105112467">从头开始阅读全文</a></li>
 </ul>
 <h3 id="性能问题"><a href="#性能问题" class="headerlink" title="性能问题"></a>性能问题</h3><p>一开始我启用了 <a href="https://www.tidio.com/panel/settings/live-chat/appearance">tidio</a> 在线聊天，busuanzi 站点访问统计<br>分析网页加载性能时，瓶颈主要在他们。介于对我来说，他们没那么重要，我就把他们都disable了，网页加载快了很多。</p>
 ]]></content>

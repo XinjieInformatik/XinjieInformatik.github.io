@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>test scroll</title>
-    <url>/2020/09/10/test-scroll/</url>
-    <content><![CDATA[<h1 id="test"><a href="#test" class="headerlink" title="test"></a>test</h1><p>adsfasdffd<br><a id="more"></a><br>dsfs<br>dsfs</p>
-<p>sdf</p>
-<h2 id="testt"><a href="#testt" class="headerlink" title="testt"></a>testt</h2><h3 id="test-1"><a href="#test-1" class="headerlink" title="test"></a>test</h3>]]></content>
-  </entry>
-  <entry>
     <title>搭建个人博客 github + hexo + NexT</title>
-    <url>/2020/09/09/build-hexo-github/</url>
+    <url>/2020/09/09/build_your_blog_hexo/</url>
     <content><![CDATA[<h1 id="搭建个人博客-hexo"><a href="#搭建个人博客-hexo" class="headerlink" title="搭建个人博客 hexo"></a>搭建个人博客 hexo</h1><p>这篇文章介绍从0到1搭建个人博客, 基于github + hexo + NexT，完全免费也美观，对于个人博客来说完全够了，半天内可以搭建并自定义完成个人博客，推荐！<br><a id="more"></a></p>
 <ul>
 <li>基于github与hexo搭建博客，完全免费</li>

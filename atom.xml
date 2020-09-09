@@ -6,7 +6,7 @@
   <link href="https://xinjieinformatik.github.io/atom.xml" rel="self"/>
   
   <link href="https://xinjieinformatik.github.io/"/>
-  <updated>2020-09-09T17:17:07.598Z</updated>
+  <updated>2020-09-09T17:14:04.144Z</updated>
   <id>https://xinjieinformatik.github.io/</id>
   
   <author>
@@ -17,26 +17,9 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>test scroll</title>
-    <link href="https://xinjieinformatik.github.io/2020/09/10/test-scroll/"/>
-    <id>https://xinjieinformatik.github.io/2020/09/10/test-scroll/</id>
-    <published>2020-09-09T17:16:40.000Z</published>
-    <updated>2020-09-09T17:17:07.598Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="test"><a href="#test" class="headerlink" title="test"></a>test</h1><p>adsfasdffd<br><a id="more"></a><br>dsfs<br>dsfs</p><p>sdf</p><h2 id="testt"><a href="#testt" class="headerlink" title="testt"></a>testt</h2><h3 id="test-1"><a href="#test-1" class="headerlink" title="test"></a>test</h3>]]></content>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;test&quot;&gt;&lt;a href=&quot;#test&quot; class=&quot;headerlink&quot; title=&quot;test&quot;&gt;&lt;/a&gt;test&lt;/h1&gt;&lt;p&gt;adsfasdffd&lt;br&gt;</summary>
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
     <title>搭建个人博客 github + hexo + NexT</title>
-    <link href="https://xinjieinformatik.github.io/2020/09/09/build-hexo-github/"/>
-    <id>https://xinjieinformatik.github.io/2020/09/09/build-hexo-github/</id>
+    <link href="https://xinjieinformatik.github.io/2020/09/09/build_your_blog_hexo/"/>
+    <id>https://xinjieinformatik.github.io/2020/09/09/build_your_blog_hexo/</id>
     <published>2020-09-09T09:37:47.000Z</published>
     <updated>2020-09-09T17:14:04.144Z</updated>
     

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>test scroll</title>
+    <url>/2020/09/10/test-scroll/</url>
+    <content><![CDATA[<h1 id="test"><a href="#test" class="headerlink" title="test"></a>test</h1><p>adsfasdffd<br><a id="more"></a><br>dsfs<br>dsfs</p>
+<p>sdf</p>
+<h2 id="testt"><a href="#testt" class="headerlink" title="testt"></a>testt</h2><h3 id="test-1"><a href="#test-1" class="headerlink" title="test"></a>test</h3>]]></content>
+  </entry>
+  <entry>
     <title>搭建个人博客 github + hexo + NexT</title>
     <url>/2020/09/09/build-hexo-github/</url>
     <content><![CDATA[<h1 id="搭建个人博客-hexo"><a href="#搭建个人博客-hexo" class="headerlink" title="搭建个人博客 hexo"></a>搭建个人博客 hexo</h1><p>这篇文章介绍从0到1搭建个人博客, 基于github + hexo + NexT，完全免费也美观，对于个人博客来说完全够了，半天内可以搭建并自定义完成个人博客，推荐！<br><a id="more"></a></p>
@@ -36,7 +43,7 @@
 <h3 id="hexo-next-美化-与-第三方插件"><a href="#hexo-next-美化-与-第三方插件" class="headerlink" title="hexo next 美化 与 第三方插件"></a>hexo next 美化 与 第三方插件</h3><p>参考：</p>
 <ul>
 <li><a href="http://eternalzttz.com/hexo-next.html">这个博客里有一系列教程,推荐!注意有些设置是低版本的</a></li>
-<li><a href="https://tding.top/archives/7696c13f.html">hexo next 主题美化，注意有些设置是低版本的</a></li>
+<li><a href="https://tding.top/archives/42c38b10.html">hexo next 主题美化，注意有些设置是低版本的</a></li>
 <li><a href="https://tding.top/archives/58cff12b.html">Hexo-NexT 添加打字特效、鼠标点击特效</a></li>
 <li><a href="https://jrbcode.gitee.io/posts/c13e56cd.html">时钟特效</a></li>
 <li><a href="http://theme-next.iissnan.com/getting-started.html">NexT文档</a></li>

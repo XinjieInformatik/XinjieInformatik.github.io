@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/11/recursion-complexity-analysis/binaryTreeExample.png">
 <meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/11/recursion-complexity-analysis/fib_example.png">
 <meta property="article:published_time" content="2020-09-11T02:18:48.000Z">
-<meta property="article:modified_time" content="2020-09-11T10:17:03.930Z">
+<meta property="article:modified_time" content="2020-09-13T08:56:32.510Z">
 <meta property="article:author" content="Xinjie">
 <meta property="article:tag" content="递归">
 <meta property="article:tag" content="复杂度分析方法">
@@ -231,10 +231,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-09-11 10:18:48 / 修改时间：18:17:03" itemprop="dateCreated datePublished" datetime="2020-09-11T10:18:48+08:00">2020-09-11</time>
+              <time title="创建时间：2020-09-11 10:18:48" itemprop="dateCreated datePublished" datetime="2020-09-11T10:18:48+08:00">2020-09-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-13 16:56:32" itemprop="dateModified" datetime="2020-09-13T16:56:32+08:00">2020-09-13</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -280,7 +286,7 @@
         <h1 id="递归复杂度分析"><a href="#递归复杂度分析" class="headerlink" title="递归复杂度分析"></a>递归复杂度分析</h1><p>递归时间复杂度 和 空间复杂度 分析 往往不那么直观。这篇blog给出通用分析法和主定理两种方法，个人推荐通用分析法，更一般性，更好记。<br><a id="more"></a></p>
 <h2 id="通用分析法"><a href="#通用分析法" class="headerlink" title="通用分析法"></a>通用分析法</h2><h3 id="递归时间复杂度分析"><a href="#递归时间复杂度分析" class="headerlink" title="递归时间复杂度分析"></a>递归时间复杂度分析</h3><p>基于递归调用数量与深度两种分析方法，核心是一样的：</p>
 <ul>
-<li>假设递归调用数量为 R, 递归内每次计算量 O(s), 则时间复杂度 R * O(s)<br>以一个完全二叉树为例，递归调用数量指的是 根节点以下的所有孩子数，也就是 2^h - 2, 可写成 O(2^h)。</li>
+<li>假设递归调用数量为 R, 递归内每次计算量 O(s), 则时间复杂度 R * O(s)<br>以一个满二叉树为例，递归调用数量指的是 根节点以下的所有孩子数，也就是 2^h - 2, 可写成 O(2^h)。</li>
 <li>假设递归调用深度为 h，每层递归内计算总量 O(k), 则时间复杂度 h * O(k)</li>
 </ul>
 <p>递归通常可以想象成二叉树的结构，画画图对递归分析，哪里加记忆化很有用。<br><img data-src="/2020/09/11/recursion-complexity-analysis/binaryTreeExample.png" alt="binaryTreeExample"></p>
@@ -291,11 +297,12 @@
 </ul>
 <h3 id="递归空间复杂度分析"><a href="#递归空间复杂度分析" class="headerlink" title="递归空间复杂度分析"></a>递归空间复杂度分析</h3><p>递归的空间占用分为两部分，递归相关空间 O(h) + O(k) 和 全局空间 O(m)<br>整体空间占用 O(h) + O(k) + O(m), 变量含义如下</p>
 <h4 id="递归相关空间"><a href="#递归相关空间" class="headerlink" title="递归相关空间"></a>递归相关空间</h4><p> O(h) + O(k)递归相关空间的占用分为两部分，1.实现递归本身占用空间 O(h)，大小为 O(递归深度) 2.递归中的额外空间占用 O(k)，大小为 O(递归函数中局部变量所占空间)。</p>
-<h5 id="实现递归本身占用空间"><a href="#实现递归本身占用空间" class="headerlink" title="实现递归本身占用空间"></a>实现递归本身占用空间</h5><p>由递归直接引起的内存开销，用于跟踪递归函数调用的栈，栈中包括：</p>
+<h5 id="实现递归本身占用空间"><a href="#实现递归本身占用空间" class="headerlink" title="实现递归本身占用空间"></a>实现递归本身占用空间</h5><p>由递归直接引起的内存开销，用于跟踪递归函数调用的栈。</p>
 <ul>
-<li>函数调用的返回地址。一旦函数调用完成，程序应该知道返回的位置，即函数调用之前的点；</li>
-<li>传递给函数调用的参数；<br>想象一个stack，不断把函数的栈压入，到底后又可以释放，因此stack的空间占用最大为 O(h), 即 O(递归深度)</li>
+<li>如果遇到函数，1.初始化函数，开辟新的内存空间，2.实参传入 3.保存当前现场</li>
+<li>调用结束后，函数占用的内存空间被释放，1.接受函数的返回值，2.恢复现场，从断点处继续执行</li>
 </ul>
+<p>想象一个stack，不断把函数的栈压入，到底后才又可以释放，因此stack的空间占用最大为 O(h), 即 O(递归深度)</p>
 <h5 id="递归中的额外空间占用"><a href="#递归中的额外空间占用" class="headerlink" title="递归中的额外空间占用"></a>递归中的额外空间占用</h5><ul>
 <li>递归函数中局部变量所占空间 O(k)。<br>注意：额外空间占用由运行该递归函数局部变量产生，一旦完成该函数调用，会<code>立刻释放空间</code>，并不会累积。</li>
 </ul>
@@ -383,7 +390,10 @@
     <a href="/2020/09/10/leetcode-combination-39-40-216-377/" rel="prev" title="leetcode 39 40 216 377 组合-递归">
       <i class="fa fa-chevron-left"></i> leetcode 39 40 216 377 组合-递归
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/13/matrix-dfs/" rel="next" title="矩阵的搜索专题">
+      矩阵的搜索专题 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -459,7 +469,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -472,7 +482,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -550,12 +560,12 @@ show_date_time();
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">11k</span>
+    <span title="站点总字数">16k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">10 分钟</span>
+    <span title="站点阅读时长">15 分钟</span>
 </div>
 <!--
 --!>

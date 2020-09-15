@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/star.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xinjieinformatik.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":{"enable":true,"onlypost":false},"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="计算机视觉总结研究生阶段一直在做计算机视觉方面的研究，想把积累的一些知识梳理总结下，这方面的知识繁多，触类旁通，只能说试着总结记录在这篇blog中。计算机视觉方面的研究很容易给人带来兴趣。从传统数字图像处理到AI深度学习，计算机视觉方面的研究一直是各个领域中的领头羊，其一些成熟的经验也对语音，推荐等方面有较好的借鉴价值。有些人说AI的噱头也很大，但我自己真正比较过，不得不说深度学习真的给计算进一步">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机视觉总结">
+<meta property="og:url" content="https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/index.html">
+<meta property="og:site_name" content="昕杰技术小站">
+<meta property="og:description" content="计算机视觉总结研究生阶段一直在做计算机视觉方面的研究，想把积累的一些知识梳理总结下，这方面的知识繁多，触类旁通，只能说试着总结记录在这篇blog中。计算机视觉方面的研究很容易给人带来兴趣。从传统数字图像处理到AI深度学习，计算机视觉方面的研究一直是各个领域中的领头羊，其一些成熟的经验也对语音，推荐等方面有较好的借鉴价值。有些人说AI的噱头也很大，但我自己真正比较过，不得不说深度学习真的给计算进一步">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/20200420_170516_55.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/20200424_232127_48.png">
+<meta property="article:published_time" content="2020-09-14T07:51:08.000Z">
+<meta property="article:modified_time" content="2020-09-14T11:53:12.893Z">
+<meta property="article:author" content="Xinjie">
+<meta property="article:tag" content="overview">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/20200420_170516_55.png">
+
+<link rel="canonical" href="https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>计算机视觉总结 | 昕杰技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="昕杰技术小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+    <a target="_blank" rel="noopener" href="https://github.com/XinjieInformatik" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">昕杰技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">后端 机器学习</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  
+ 
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/dog.png">
+      <meta itemprop="name" content="Xinjie">
+      <meta itemprop="description" content="欢迎访问我的技术博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="昕杰技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机视觉总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-14 15:51:08 / 修改时间：19:53:12" itemprop="dateCreated datePublished" datetime="2020-09-14T15:51:08+08:00">2020-09-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/computer-vision/" itemprop="url" rel="index"><span itemprop="name">computer vision</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="计算机视觉总结"><a href="#计算机视觉总结" class="headerlink" title="计算机视觉总结"></a>计算机视觉总结</h1><p>研究生阶段一直在做计算机视觉方面的研究，想把积累的一些知识梳理总结下，这方面的知识繁多，触类旁通，只能说试着总结记录在这篇blog中。计算机视觉方面的研究很容易给人带来兴趣。从传统数字图像处理到AI深度学习，计算机视觉方面的研究一直是各个领域中的领头羊，其一些成熟的经验也对语音，推荐等方面有较好的借鉴价值。有些人说AI的噱头也很大，但我自己真正比较过，不得不说深度学习真的给计算进一步理解图片带来很大的进步。</p>
+<a id="more"></a>
+<h2 id="目标检测总结"><a href="#目标检测总结" class="headerlink" title="目标检测总结"></a>目标检测总结</h2><p>自己看过很多目标检测相关的开源代码、框架，自己也写过专用检测网络部署在机器人或者开发板上。目标检测也是一个庞大的知识体系，有兴趣的话可以自己找几篇综述。从 传统的卷积+svm 到现在的深度学习，从 anchor based 到 anchor free，从 two stage 到 one stage。希望大家能够通过这篇文章，快速梳理清不同目标检测框架的核心（主要是深度学习方面的），并能够独立开展自己的研究。<br>目标检测的目的是输出待检测物体bbox的位置(x1,x2,y1,y2)及其分类cls。<br><img data-src="/2020/09/14/computer-vision-overview/20200420_170516_55.png" alt="20200420_170516_55"></p>
+<h3 id="不同目标检测网络间的核心区别"><a href="#不同目标检测网络间的核心区别" class="headerlink" title="不同目标检测网络间的核心区别"></a>不同目标检测网络间的核心区别</h3><p>不同的目标检测网络层出不穷，但是最核心的就是以下三点，从这三点出发，可以帮你梳理清楚任何一个目标检测网络以及与其他网络之间的区别</p>
+<ul>
+<li><strong>如何定义正负样本</strong><br>训练一个目标检测网络，真值是目标框bbox的u,v坐标和类别。如何定义正样本，使得图片经过神经网络后，就能输入相应的检测框呢？</li>
+<li><strong>如何优化损失函数</strong><br>损失函数是训练过程的优化目标，如何设计损失函数更好的激活准确的输出呢？</li>
+<li><strong>使用的神经网络结构</strong><br>具体使用什么网络结构，什么卷积核，什么激活函数，什么插值方法 …呢？</li>
+</ul>
+<h3 id="目标检测网络的分类"><a href="#目标检测网络的分类" class="headerlink" title="目标检测网络的分类"></a>目标检测网络的分类</h3><p>通用目标检测网络基于<code>是否使用预定义的anchor</code>可分为：</p>
+<ul>
+<li>Anchor Based 网络：Faster-RCNN, RetinaNet, SSD,</li>
+<li>Anchor Free  网络: CornetNet, CenterNet, FCOS, Yolo …</li>
+</ul>
+<p>anchor 其实是从传统cv延续来的概念，在深度学习的训练中任然显得很重要，因为可以有效减少回归方差，稳定loss。得益于backbone特征提取的有效性不断提升，2018年开始出现许多 anchor free 的网络，与 anchor based 网络相比，anchor free 网络更简单，正样本的定义更直接，可以避免训练与预测阶段密集 anchor 生成和IoU的计算量。然而 anchor free 的网络在 test set 与 train set 有较明显的 domain gap 的时候表现不如 anchor based 的网络稳定，False positive 的检测偏多。原因是正样本的定义方式，使得正负样本数目上的不平衡性加剧。</p>
+<p>目标检测网络基于<code>是否提供 foreground/background region proposals</code> 可分为:</p>
+<ul>
+<li>Two stage 网络: Faster-RCNN</li>
+<li>One stage 网络: Yolo, RetinaNet, Retinaface …</li>
+</ul>
+<p>因为实时性的要求我主要接触的都是基于one stage的网络，但是two-stage的网络如 Faster-RCNN，虽然速度不够快，anchor计算较繁琐，任然被广泛使用。尤其是一些拓展性工作，比如基于 proposal 的 feature 进一步 embedding，或者像 Mask-RCNN 进一步语义分割。虽然two stage网络中 anchor 的准备工作带来额外开销，但是由于有多任务监督loss，其实Faster-RCNN 的训练速度并不比一些的one-stage网络慢，至今任是一个稳定有效的通用网络。</p>
+<p>不能单纯的看各个网络在coco的跑分，针对具体的业务场景，合适的才是好的。</p>
+<h3 id="典型目标检测网络之间的异同"><a href="#典型目标检测网络之间的异同" class="headerlink" title="典型目标检测网络之间的异同"></a>典型目标检测网络之间的异同</h3><p>下面我将以Faster-RCNN, RetinaNet, Yolov3, CenterNet这四个很有代表性的网络为例，<br>从<strong>如何定义正负样本</strong>，<strong>如何优化损失函数</strong>，<strong>使用的神经网络结构</strong> 这三个方面分析他们的异同。</p>
+<h4 id="yolov1-v2-v3-异同"><a href="#yolov1-v2-v3-异同" class="headerlink" title="yolov1, v2, v3 异同"></a>yolov1, v2, v3 异同</h4><ol>
+<li>如何定义正负样本</li>
+</ol>
+<ul>
+<li>v1: 物体中心落在哪个grid, 哪个grid就负责检测该物体.xyhw直接作为归回目标(图片被分为7x7grids)</li>
+<li>v2: 物体中心落在哪个grid,和该grid的anchor计算IoU,匹配的anchor与GT的delta作为归回目标</li>
+<li>v3: 与GT IoU最大的anchor与GT的delta作为回归目标</li>
+</ul>
+<ol>
+<li>如何优化损失函数</li>
+</ol>
+<ul>
+<li>v1: l2 loss, softmax loss</li>
+<li>v2: l2 loss, softmax loss</li>
+<li>v3: 只有wh用的 l2 loss, 其他均为sigmoid BCE loss, 引入了bbox scale loss</li>
+</ul>
+<ol>
+<li>网络结构的不同</li>
+</ol>
+<ul>
+<li>v1: 卷积+全连接层(dropout)</li>
+<li>v2: darknet19, 全卷积(batchnorm)</li>
+<li>v3: darknet53, FPN</li>
+</ul>
+<h4 id="yolo-与-RetinaNet-的不同"><a href="#yolo-与-RetinaNet-的不同" class="headerlink" title="yolo 与 RetinaNet 的不同"></a>yolo 与 RetinaNet 的不同</h4><ol>
+<li>如何定义正负样本</li>
+</ol>
+<ul>
+<li>yolov3，RetinaNet 都是以与GT IoU最大的anchor与GT的delta作为回归目标。小区别：based anchor 数目不同, RetinaNet每个尺度下9个, yolov3 每个尺度下3个。</li>
+</ul>
+<ol>
+<li>如何优化损失函数</li>
+</ol>
+<ul>
+<li>RetinaNet 使用的是Focal loss 与 smooth l1</li>
+<li>yolov3 只有wh用的 l2 loss, 其他均为sigmoid BCE loss, 引入了bbox scale loss</li>
+</ul>
+<ol>
+<li>网络结构的不同</li>
+</ol>
+<ul>
+<li>yolov3 的FPN不是标准的FPN,8/16/32的特征图还经过几层conv才concat融合, FPN是add特征图相加</li>
+<li>RetinaNet cls,bbox各一个分支. yolo cls,bbox在一个分支里.</li>
+<li>RetinaNet FPN不同尺度之间,head参数共享, yolov3 独立</li>
+</ul>
+<h4 id="RetinaNet-与-Retinaface-的不同"><a href="#RetinaNet-与-Retinaface-的不同" class="headerlink" title="RetinaNet 与 Retinaface 的不同"></a>RetinaNet 与 Retinaface 的不同</h4><ol>
+<li>如何定义正负样本</li>
+</ol>
+<ul>
+<li>Retanaface 每个尺度两个不同大小的正方形based anchor</li>
+</ul>
+<ol>
+<li>如何优化损失函数</li>
+</ol>
+<ul>
+<li>cls loss采用sampling的办法, 取topk个CE loss</li>
+</ul>
+<ol>
+<li>网络结构的不同</li>
+</ol>
+<ul>
+<li>Retanaface 论文中不同尺度间head参数共享,但实际代码独立</li>
+<li>Retanaface 引入 SSH layer, 融合3x3, 5x5, 7x7的特征,实际实现中用的两次,三次卷积代替5x5,7x7卷积</li>
+</ul>
+<h4 id="RetinaNet-与-Faster-RCNN-的不同"><a href="#RetinaNet-与-Faster-RCNN-的不同" class="headerlink" title="RetinaNet 与 Faster RCNN 的不同"></a>RetinaNet 与 Faster RCNN 的不同</h4><ol>
+<li>如何定义正负样本</li>
+</ol>
+<ul>
+<li>Faster RCNN 属于 two stage，每个stage各有GT，stage one 只区分前景与背景，stage two 再具体区分类别或者还是背景。stage two 中的 正负anchor样本 以 1：3 比例从stage one 中的 anchor 采样。</li>
+</ul>
+<ol>
+<li>如何优化损失函数</li>
+</ol>
+<ul>
+<li>cls loss采用sampling的办法, 取topk个CE loss</li>
+</ul>
+<ol>
+<li>网络结构的不同</li>
+</ol>
+<ul>
+<li>Retanaface 论文中不同尺度间head参数共享,但实际代码独立</li>
+<li>Retanaface 引入 SSH layer, 融合3x3, 5x5, 7x7的特征,实际实现中用的两次,三次卷积代替5x5,7x7卷积</li>
+</ul>
+<h3 id="Faster-RCNN"><a href="#Faster-RCNN" class="headerlink" title="Faster-RCNN"></a>Faster-RCNN</h3><hr>
+<h3 id="RetinaNet"><a href="#RetinaNet" class="headerlink" title="RetinaNet"></a>RetinaNet</h3><p>这里以 RetinaNet 展开，具体介绍下吧<br>RetinaNet是出了名的许多重复的层可以坎，一个典型的例子就是Retinaface. 可以去学习下RetinaNet<br>对于简单专业的检测任务，如何针对性的简化网络</p>
+<h4 id="真值定义"><a href="#真值定义" class="headerlink" title="真值定义"></a>真值定义</h4><p>在下采样的FPN特征图上，每个网格配备9个based-anchor. 这9个based-anchor有三个不同的尺寸，<br>长宽比分别为 1:2, 1:1, 2:1. 对于batch里每个图片，都会基于其特征图，每个网格生成based-anchor。<br>与GT物体bbox的IoU大于阈值0.5的based-anchor被定义为正样本，介于0.4,0.5之间的被定义为ignored，<br>小于0.4的定义为负样本。阈值可以自己调整。based-anchor的尺寸可以自己设定，尤其要小心的是，<br>不同数据集，源图片尺寸与coco数据集不一样，图片预处理后如果大小与网络本身预设输入的的尺寸不一致，<br>需要基于新的尺寸重新修改based-anchor size，如果一样，则不需要修改based-anchor size 尺寸。<br>因为based-anchor size已经基于原图片尺寸，卷积层感受野进行过合理配置，便于后续提供良好的<br>anchor matching(based-anchor与bbox GT)得到尽可能多的正样本。此时花时间调整based-anchor size<br>参数花时间并且通常效果更差。</p>
+<p>对于类别回归的真值定义：<br>物体GT bbox的类别会被one-hot编码，与其IoU大于阈值的based-anchor被定义为正样本，也就是网络<br>最后一层的输出。其后不接batchnorm 和 activation。计算loss前, sigmoid缩放到(0,1)<br>$ sigmoid = \frac{1}{1 + e^{-x}} $<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.nn.Conv2d(in_channels, num_anchors*num_classes, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>)</span><br></pre></td></tr></table></figure><br>正样本(one-hot编码的物体类别)与负样本(background)作为类别回归的真值。<br>网络class head 最终输出的out channel维度为 (num_anchors<em>num_classes)。<br>num_anchors为9，是特征图每个网格配备的based-anchor数目。<br>ps: 注意与Faster-RCNN 不同，Faster-RCNN class head 输出维度为 ((class_num+1) </em> 9)，<br>1 是 background，最后一层输出后接softmax。</p>
+<p>对于bbox位置回归的真值定义：<br>每个based-anchor去回归delta cx, delta cy, delta h, delta w。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.nn.Conv2d(in_channels, num_anchors*<span class="number">4</span>, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>)</span><br></pre></td></tr></table></figure><br>小的variance对网络的训练更好，因此网络并不是直接回归物体bbox的 cx,cy,h,w。<br>而是去回归物体bbox中心cx,cy基于其匹配的based_anchor中心的差值，并除以based_anchor的尺度<br>h,w 也同理。物体尺度相对于based_anchor的尺度的log。这些处理很巧妙的配合了图片归一化的前处理，<br>与batch normalization,使得网络能够更快更稳定收敛。<br>bbox gt真值的定义如下，直接看伪代码其实更方便理解。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dx = (gt_cx - based_anchor_cx) / based_anchor_widths</span><br><span class="line">dy = (gt_cy - based_anchor_cy) / based_anchor_heights</span><br><span class="line">dw = ln(gt_widths / based_anchor_widths)</span><br><span class="line">dh = ln(gt_heights / based_anchor_heights)</span><br><span class="line">deltas = torch.stack((dx, dy, dw, dh), dim=<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<h4 id="loss计算"><a href="#loss计算" class="headerlink" title="loss计算"></a>loss计算</h4><h5 id="binary-loss"><a href="#binary-loss" class="headerlink" title="binary loss"></a>binary loss</h5><script type="math/tex; mode=display">sigmoid = \frac{1}{1 + e^{-x}}</script><script type="math/tex; mode=display">L = L_{neg} + L_{pos} = -\sum\limits_{i=1}^n log(1-p) - \sum\limits_{i=1}^n log(p)</script><script type="math/tex; mode=display">L = -ylog(p)-(1-y)log(1-p)</script><h5 id="CE-loss"><a href="#CE-loss" class="headerlink" title="CE loss"></a>CE loss</h5><script type="math/tex; mode=display">L = -\sum\limits_{i=1}^n log(p)</script><h5 id="softmax-loss"><a href="#softmax-loss" class="headerlink" title="softmax loss"></a>softmax loss</h5><script type="math/tex; mode=display">softmax = \frac {e^{p_i}}{\sum\limits_{j=1}^n e^{p_j}}</script><script type="math/tex; mode=display">-\sum\limits_{i=1}^n log(\frac {e^{z_i}}{\sum\limits_{j=1}^n e^{z_j}})</script><h5 id="分类loss"><a href="#分类loss" class="headerlink" title="分类loss"></a>分类loss</h5><p>只有正样本与负样本会参与分类loss计算,被ignored的based-anchor不参与计算。分类loss是基于交叉熵的，优化的是概率。对于正样本，loss监督网络在其对应的class_id层有接近1的输出。对于负样本，loss监督网络在其对应输出层输出接近0。focal loss 是常见的one stage detector的分类loss，基于CE交叉熵loss，提出 1.优化正样本与background不平衡问题（可能只有几百个based_anchor与GT bbox匹配成功，其余十几万的都是负样本，负样本有可能主导分类loss） 2.重点优化难训练样本的概率见下图。focal loss中 1. alpha_t正样本权重，1-alpha_t负样本权重，解决正样本与background的不平衡 2. gamma，在ce_loss前乘上 $(1 - p_t)^{\gamma}$，减少预测正确的大概率样本的loss，见下图。当gamma = 0, focal loss = CE loss</p>
+<script type="math/tex; mode=display">FL(p_t) = -\alpha_t (1-p_t)^\gamma log(p_t)</script><p><img data-src="/2020/09/14/computer-vision-overview/20200424_232127_48.png" alt="20200424_232127_48"></p>
+<p>直接看下伪代码吧。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://arxiv.org/pdf/1708.02002.pdf focal loss paper</span></span><br><span class="line">p = torch.sigmoid(predicts)</span><br><span class="line">ce_loss = torch.nn.functional.binary_cross_entropy_with_logits(predicts, targets, reduction=<span class="string">&quot;none&quot;</span>)</span><br><span class="line">p_t = p * targets + (<span class="number">1</span> - p) * (<span class="number">1</span> - targets)</span><br><span class="line">loss = ce_loss * ((<span class="number">1</span> - p_t) ** gamma)</span><br><span class="line"><span class="keyword">if</span> alpha &gt;= <span class="number">0</span>:</span><br><span class="line">    alpha_t = alpha * targets + (<span class="number">1</span> - alpha) * (<span class="number">1</span> - targets)</span><br><span class="line">    loss = alpha_t * loss</span><br><span class="line">loss = loss.sum()</span><br><span class="line">loss = loss / max(<span class="number">1</span>, num_matched_based_anchors)</span><br><span class="line"><span class="keyword">return</span> loss</span><br></pre></td></tr></table></figure>
+<p>由于正负样本数目间悬殊的差距，会造成训练初期不稳定，focal loss 还提出网络权重初始化的问题，让模型训练初期正样本的预测更少，负样本的更多，获得一个更稳定更小的初期的训练loss，这个我在第一次看的时候完全没有注意到。网络class head最后一层的bias被设置成 $ -log((1-\pi)/\pi) $, 其中$\pi=0.01$。 其他层（backbone除外），被设置为<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">torch.nn.init.normal_(layer.weight, mean=<span class="number">0</span>, std=<span class="number">0.01</span>)</span><br><span class="line">torch.nn.init.constant_(layer.bias, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
+<h4 id="yolov3-loss"><a href="#yolov3-loss" class="headerlink" title="yolov3 loss"></a>yolov3 loss</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">xy_loss = object_mask * box_loss_scale * K.binary_crossentropy(raw_true_xy, raw_pred[...,<span class="number">0</span>:<span class="number">2</span>], from_logits=<span class="literal">True</span>)</span><br><span class="line">wh_loss = object_mask * box_loss_scale * <span class="number">0.5</span> * K.square(raw_true_wh-raw_pred[...,<span class="number">2</span>:<span class="number">4</span>])</span><br><span class="line">confidence_loss = object_mask * K.binary_crossentropy(object_mask, raw_pred[...,<span class="number">4</span>:<span class="number">5</span>], from_logits=<span class="literal">True</span>)+ \</span><br><span class="line">    (<span class="number">1</span>-object_mask) * K.binary_crossentropy(object_mask, raw_pred[...,<span class="number">4</span>:<span class="number">5</span>], from_logits=<span class="literal">True</span>) * ignore_mask</span><br><span class="line">class_loss = object_mask * K.binary_crossentropy(true_class_probs, raw_pred[...,<span class="number">5</span>:], from_logits=<span class="literal">True</span>)</span><br><span class="line">loss = xy_loss + wh_loss + confidence_loss + class_loss</span><br></pre></td></tr></table></figure>
+<h4 id="IoU"><a href="#IoU" class="headerlink" title="IoU"></a>IoU</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">iou_calculate</span>(<span class="params">bbox1, bbox2</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">      bbox1: bounding boxes, size [N, 4] (xmin, ymin, xmax, ymax)</span></span><br><span class="line"><span class="string">      bbox2: bounding boxes, size [M, 4]</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">      IoU, size [N,M]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(bbox1, list): bbox1 = np.array(bbox1)</span><br><span class="line">    <span class="keyword">if</span> isinstance(bbox2, list): bbox2 = np.array(bbox2)</span><br><span class="line"></span><br><span class="line">    bbox1_area = (bbox1[..., <span class="number">2</span>] - bbox1[..., <span class="number">0</span>]) * (bbox1[..., <span class="number">3</span>] - bbox1[..., <span class="number">1</span>]) <span class="comment"># (N,)</span></span><br><span class="line">    bbox2_area = (bbox2[..., <span class="number">2</span>] - bbox2[..., <span class="number">0</span>]) * (bbox2[..., <span class="number">3</span>] - bbox2[..., <span class="number">1</span>]) <span class="comment"># (M,)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># left_top, right_bottom coordinates iof intersection point</span></span><br><span class="line">    lt_coordinate = np.maximum(bbox1[:, np.newaxis, :<span class="number">2</span>], bbox2[:, :<span class="number">2</span>]) <span class="comment"># (N, M, 2)</span></span><br><span class="line">    rb_coordinate = np.minimum(bbox1[:, np.newaxis, <span class="number">2</span>:], bbox2[:, <span class="number">2</span>:]) <span class="comment"># (N, M, 2)</span></span><br><span class="line"></span><br><span class="line">    intersection = np.maximum(rb_coordinate-lt_coordinate, <span class="number">0</span>) <span class="comment"># (N, M, 2)</span></span><br><span class="line">    inter_area = intersection[..., <span class="number">0</span>] * intersection[..., <span class="number">1</span>]  <span class="comment"># (N, M)</span></span><br><span class="line">    <span class="comment"># always boardcast bbox1[:, np.newaxis] to have dim M</span></span><br><span class="line">    union_area = bbox1_area[:, np.newaxis] + bbox2_area - inter_area <span class="comment"># (N, M)</span></span><br><span class="line">    IoU = inter_area / union_area</span><br><span class="line">    <span class="keyword">return</span> IoU</span><br></pre></td></tr></table></figure>
+<h4 id="NMS"><a href="#NMS" class="headerlink" title="NMS"></a>NMS</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">nms</span>(<span class="params">bboxes, iou_thresh</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">      bboxes: after score. np.array. (N, 6) [xmin, ymin, xmax, ymax, score, class]</span></span><br><span class="line"><span class="string">      iou_thresh: float</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">      bboxes_nms: np.array. (N&#x27;, 6) [xmin, ymin, xmax, ymax, score, class]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    classes = bboxes[:, <span class="number">5</span>] <span class="comment"># (N,)</span></span><br><span class="line">    unique_classes = set(classes)</span><br><span class="line">    bboxes_nms = []</span><br><span class="line">    <span class="keyword">for</span> cls <span class="keyword">in</span> unique_classes:</span><br><span class="line">        mask = classes == cls <span class="comment"># (N,)</span></span><br><span class="line">        cls_bboxes = bboxes[mask] <span class="comment"># (M, 6)</span></span><br><span class="line">        <span class="comment"># nms in each class</span></span><br><span class="line">        x1, y1 = cls_bboxes[:, <span class="number">0</span>], cls_bboxes[:, <span class="number">1</span>] <span class="comment"># (M,)</span></span><br><span class="line">        x2, y2 = cls_bboxes[:, <span class="number">2</span>], cls_bboxes[:, <span class="number">3</span>]</span><br><span class="line">        scores = cls_bboxes[:, <span class="number">4</span>] <span class="comment"># (M,)</span></span><br><span class="line">        areas = (x2 - x1) * (y2 - y1) <span class="comment"># (M,)</span></span><br><span class="line">        order = scores.argsort()[::<span class="number">-1</span>] <span class="comment"># (M,)</span></span><br><span class="line">        keep = []</span><br><span class="line">        <span class="keyword">while</span> order.size &gt; <span class="number">0</span>:</span><br><span class="line">            i = order[<span class="number">0</span>]</span><br><span class="line">            keep.append(i)</span><br><span class="line">            x1_max = np.maximum(x1[i], x1[order[<span class="number">1</span>:]]) <span class="comment"># (1,), (M-1,) -&gt; (M-1,)</span></span><br><span class="line">            y1_max = np.maximum(y1[i], y1[order[<span class="number">1</span>:]])</span><br><span class="line">            x2_min = np.minimum(x2[i], x2[order[<span class="number">1</span>:]])</span><br><span class="line">            y2_min = np.minimum(y2[i], y2[order[<span class="number">1</span>:]])</span><br><span class="line">            w = np.maximum(<span class="number">0</span>, x2_min - x1_max) <span class="comment"># (M-1,)</span></span><br><span class="line">            h = np.maximum(<span class="number">0</span>, y2_min - y1_max)</span><br><span class="line">            inter_area = w * h <span class="comment"># (M-1,)</span></span><br><span class="line">            union_area = areas[i] + areas[order[<span class="number">1</span>:]] - inter_area <span class="comment"># (1,), (M-1,) -&gt; (M-1,)</span></span><br><span class="line">            iou = inter_area / union_area <span class="comment"># (M-1,)</span></span><br><span class="line">            keep_index = np.where(iou &lt;= iou_thresh)[<span class="number">0</span>]</span><br><span class="line">            order = order[keep_index + <span class="number">1</span>]</span><br><span class="line">        keep_bboxes = cls_bboxes[keep]</span><br><span class="line">        bboxes_nms.append(keep_bboxes)</span><br><span class="line">    bboxes_nms = np.vstack(bboxes_nms)</span><br><span class="line">    <span class="keyword">return</span> bboxes_nms</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>技术分享</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="Xinjie 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Xinjie
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/" title="计算机视觉总结">https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/overview/" rel="tag"># overview</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/13/matrix-dfs/" rel="prev" title="矩阵的搜索专题">
+      <i class="fa fa-chevron-left"></i> 矩阵的搜索专题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/14/sql-base/" rel="next" title="sql-base">
+      sql-base <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+ 
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+       
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#计算机视觉总结"><span class="nav-number">1.</span> <span class="nav-text">计算机视觉总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目标检测总结"><span class="nav-number">1.1.</span> <span class="nav-text">目标检测总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不同目标检测网络间的核心区别"><span class="nav-number">1.1.1.</span> <span class="nav-text">不同目标检测网络间的核心区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#目标检测网络的分类"><span class="nav-number">1.1.2.</span> <span class="nav-text">目标检测网络的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#典型目标检测网络之间的异同"><span class="nav-number">1.1.3.</span> <span class="nav-text">典型目标检测网络之间的异同</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#yolov1-v2-v3-异同"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">yolov1, v2, v3 异同</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#yolo-与-RetinaNet-的不同"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">yolo 与 RetinaNet 的不同</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RetinaNet-与-Retinaface-的不同"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">RetinaNet 与 Retinaface 的不同</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RetinaNet-与-Faster-RCNN-的不同"><span class="nav-number">1.1.3.4.</span> <span class="nav-text">RetinaNet 与 Faster RCNN 的不同</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Faster-RCNN"><span class="nav-number">1.1.4.</span> <span class="nav-text">Faster-RCNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RetinaNet"><span class="nav-number">1.1.5.</span> <span class="nav-text">RetinaNet</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#真值定义"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">真值定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loss计算"><span class="nav-number">1.1.5.2.</span> <span class="nav-text">loss计算</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#binary-loss"><span class="nav-number">1.1.5.2.1.</span> <span class="nav-text">binary loss</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CE-loss"><span class="nav-number">1.1.5.2.2.</span> <span class="nav-text">CE loss</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#softmax-loss"><span class="nav-number">1.1.5.2.3.</span> <span class="nav-text">softmax loss</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分类loss"><span class="nav-number">1.1.5.2.4.</span> <span class="nav-text">分类loss</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#yolov3-loss"><span class="nav-number">1.1.5.3.</span> <span class="nav-text">yolov3 loss</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IoU"><span class="nav-number">1.1.5.4.</span> <span class="nav-text">IoU</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NMS"><span class="nav-number">1.1.5.5.</span> <span class="nav-text">NMS</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Xinjie"
+      src="/images/dog.png">
+  <p class="site-author-name" itemprop="name">Xinjie</p>
+  <div class="site-description" itemprop="description">欢迎访问我的技术博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XinjieInformatik" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XinjieInformatik" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      <!--
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=427606780&auto=1&height=66"></iframe>
+      -->
+      <div id="">
+      <canvas id="canvas" style="width:60%;">
+      </div>
+      <script type="text/javascript" src="/js/canvas-dance-time.js"></script>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+  
+
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div id="days"></div>
+<script>
+function show_date_time(){
+    window.setTimeout("show_date_time()", 1000);
+    BirthDay=new Date("09/09/2020 08:13:14");//修改为自己的blog建站时间
+    today=new Date();
+    timeold=(today.getTime()-BirthDay.getTime());
+    sectimeold=timeold/1000
+    secondsold=Math.floor(sectimeold);
+    msPerDay=24*60*60*1000
+    e_daysold=timeold/msPerDay
+    daysold=Math.floor(e_daysold);
+    e_hrsold=(e_daysold-daysold)*24;
+    hrsold=setzero(Math.floor(e_hrsold));
+    e_minsold=(e_hrsold-hrsold)*60;
+    minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+    seconds=setzero(Math.floor((e_minsold-minsold)*60));
+    document.getElementById('days').innerHTML="本站已安全运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+function setzero(i){
+    if (i<10)
+    {i="0" + i};
+    return i;
+}
+show_date_time();
+</script>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xinjie</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">34k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">31 分钟</span>
+</div>
+<!--
+--!>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/',]
+      });
+      });
+  </script>
+ 
+  
+
+  <script async src="/js/cursor.js"></script> 
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'a054acd527b7f50a7920',
+      clientSecret: '2f3218b7d2f9dd1ed5ccd36593a3572a9c4d28d3',
+      repo        : 'gitalks_comments',
+      owner       : 'XinjieInformatik',
+      admin       : ['XinjieInformatik'],
+      id          : '0bde2e479353d2c7f9fa049dc760a47f',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

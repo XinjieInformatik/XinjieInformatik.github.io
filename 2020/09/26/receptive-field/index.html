@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/star.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xinjieinformatik.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":{"enable":true,"onlypost":false},"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="感受野计算图像里，感受野是一个比较基础的概念了。如果图片中有许多大物体，那至少要保证感受野大于等于大物体的尺度。这篇blog给出理论感受野的计算方式，计算是从后往前递推的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="感受野计算">
+<meta property="og:url" content="https://xinjieinformatik.github.io/2020/09/26/receptive-field/index.html">
+<meta property="og:site_name" content="昕杰技术小站">
+<meta property="og:description" content="感受野计算图像里，感受野是一个比较基础的概念了。如果图片中有许多大物体，那至少要保证感受野大于等于大物体的尺度。这篇blog给出理论感受野的计算方式，计算是从后往前递推的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/26/receptive-field/感受野计算-d5a9acbc.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/26/receptive-field/感受野计算-ae2fc619.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/26/receptive-field/感受野计算-79f99ee6.png">
+<meta property="article:published_time" content="2020-09-26T15:29:33.000Z">
+<meta property="article:modified_time" content="2020-09-26T15:56:40.220Z">
+<meta property="article:author" content="Xinjie">
+<meta property="article:tag" content="感受野计算">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xinjieinformatik.github.io/2020/09/26/receptive-field/感受野计算-d5a9acbc.png">
+
+<link rel="canonical" href="https://xinjieinformatik.github.io/2020/09/26/receptive-field/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>感受野计算 | 昕杰技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="昕杰技术小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+    <a target="_blank" rel="noopener" href="https://github.com/XinjieInformatik" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">昕杰技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">后端 机器学习</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  
+ 
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/26/receptive-field/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/dog.png">
+      <meta itemprop="name" content="Xinjie">
+      <meta itemprop="description" content="欢迎访问我的技术博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="昕杰技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          感受野计算
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-26 23:29:33 / 修改时间：23:56:40" itemprop="dateCreated datePublished" datetime="2020-09-26T23:29:33+08:00">2020-09-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>16 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="感受野计算"><a href="#感受野计算" class="headerlink" title="感受野计算"></a>感受野计算</h1><p>图像里，感受野是一个比较基础的概念了。如果图片中有许多大物体，那至少要保证感受野大于等于大物体的尺度。这篇blog给出理论感受野的计算方式，计算是从后往前递推的。</p>
+<a id="more"></a>
+<p>在设计网络层次时，有效感受野是一个重要参考依据，但是很多资料并没有把感受野的计算讲清楚，所以正好自己总结一下，并给出分类网络与目标检测网络的理论感受野计算的代码。需要注意的是有效感受野比理论感受野小。</p>
+<p><img data-src="/2020/09/26/receptive-field/感受野计算-d5a9acbc.png" width="40%"></p>
+<p>特征的有效感受野（实际起作用的感受野）实际上是小于理论感受野的.虽然x11和x33都位于第二层特征感受野内，但是二者对最后的特征o11(2)的影响却不同，输入中越靠感受野中间的元素对特征的贡献越大。</p>
+<p><img data-src="/2020/09/26/receptive-field/感受野计算-ae2fc619.png" width="70%"></p>
+<p>具体可参见论文<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1701.04128">Understanding the Effective Receptive Field</a></p>
+<p>计算理论感受野，分为2步</p>
+<ol>
+<li><p>依次列出每个卷积层的[filter_size 卷积核大小, stride 步长], 如果同时想计算每层的大小需要补充 [padding 填充]，如class networkReceptiveField 中我分别列出了Alexnet， vgg16， 基于darknet53的yolo v3，基于mobilenet v2的yolo v3的卷积层结构[filter_size, stride, padding]在self.networks</p>
+</li>
+<li><p>倒推计算卷积层感受野，从网络的最后一层逐层递推到该层。如下图，计算第三层实心点的理论感受野，先计算该点对应第二层的感受野，再计算对应第一层的感受野。（1，2，3层特征图大小6*6，padding为1，stride为1）</p>
+</li>
+</ol>
+<p><img data-src="/2020/09/26/receptive-field/感受野计算-79f99ee6.png" width="60%"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">receptive_field = <span class="number">1</span></span><br><span class="line"><span class="keyword">for</span> layer <span class="keyword">in</span> reversed(range(layernum)):</span><br><span class="line">    filter_size, stride, _ = net[layer]</span><br><span class="line">    receptive_field = ((receptive_field - <span class="number">1</span>) * stride) + filter_size</span><br></pre></td></tr></table></figure>
+<p>补充：卷积层padding的计算</p>
+<ul>
+<li>卷积中padding的计算公式</li>
+</ul>
+<script type="math/tex; mode=display">padding = \frac{(shape_{out} - 1) * stride + filter_{size} - shape_{in}}{2}</script><ul>
+<li>如果特征图大小不变</li>
+</ul>
+<script type="math/tex; mode=display">padding = \frac{filter_{size} - 1}{2}</script><p>完整的代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">networkReceptiveField</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, img_input_size</span>):</span></span><br><span class="line">        <span class="comment"># by default, provide 4 networks structures</span></span><br><span class="line">        self.networks = &#123;</span><br><span class="line">        <span class="comment"># parameters: [filter_size, stride, padding]</span></span><br><span class="line">    <span class="string">&#x27;alexnet&#x27;</span>: &#123;<span class="string">&#x27;parameters&#x27;</span>: [[<span class="number">11</span>, <span class="number">4</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0</span>], [<span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0</span>]],</span><br><span class="line">                <span class="string">&#x27;name&#x27;</span>: [<span class="string">&#x27;conv1&#x27;</span>, <span class="string">&#x27;pool1&#x27;</span>, <span class="string">&#x27;conv2&#x27;</span>, <span class="string">&#x27;pool2&#x27;</span>, <span class="string">&#x27;conv3&#x27;</span>, <span class="string">&#x27;conv4&#x27;</span>, <span class="string">&#x27;conv5&#x27;</span>, <span class="string">&#x27;pool5&#x27;</span>]&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;vgg16&#x27;</span>:   &#123;<span class="string">&#x27;parameters&#x27;</span>: [[<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">                      [<span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">                      [<span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>]],</span><br><span class="line">                <span class="string">&#x27;name&#x27;</span>: [<span class="string">&#x27;conv1_1&#x27;</span>, <span class="string">&#x27;conv1_2&#x27;</span>, <span class="string">&#x27;pool1&#x27;</span>, <span class="string">&#x27;conv2_1&#x27;</span>, <span class="string">&#x27;conv2_2&#x27;</span>, <span class="string">&#x27;pool2&#x27;</span>, <span class="string">&#x27;conv3_1&#x27;</span>, <span class="string">&#x27;conv3_2&#x27;</span>,</span><br><span class="line">                         <span class="string">&#x27;conv3_3&#x27;</span>, <span class="string">&#x27;pool3&#x27;</span>, <span class="string">&#x27;conv4_1&#x27;</span>, <span class="string">&#x27;conv4_2&#x27;</span>, <span class="string">&#x27;conv4_3&#x27;</span>, <span class="string">&#x27;pool4&#x27;</span>, <span class="string">&#x27;conv5_1&#x27;</span>, <span class="string">&#x27;conv5_2&#x27;</span>, <span class="string">&#x27;conv5_3&#x27;</span>,</span><br><span class="line">                         <span class="string">&#x27;pool5&#x27;</span>]&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;darknet53&#x27;</span>: &#123;<span class="string">&#x27;parameters&#x27;</span>: [</span><br><span class="line">                           <span class="comment"># stage 0</span></span><br><span class="line">                          [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>],</span><br><span class="line">                           <span class="comment"># stage 1</span></span><br><span class="line">                          [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>],</span><br><span class="line">                           <span class="comment"># stage 2</span></span><br><span class="line">                          [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>],</span><br><span class="line">                           <span class="comment"># stage 3</span></span><br><span class="line">                          [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">                          [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">                          <span class="comment"># [1, 1, 0], [3, 1, 1], [1, 1, 0], [3, 1, 1], [1, 1, 0], [3, 1, 1], [1, 1, 0], # yolo layers S</span></span><br><span class="line">                           <span class="comment"># stage 4</span></span><br><span class="line">                          [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">                          [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">                          <span class="comment"># [1, 1, 0], [3, 1, 1], [1, 1, 0], [3, 1, 1], [1, 1, 0], [3, 1, 1], [1, 1, 0], # yolo layers M</span></span><br><span class="line">                           <span class="comment"># stage 5</span></span><br><span class="line">                          [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">                          [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>] <span class="comment"># yolo layers L</span></span><br><span class="line">                          ],</span><br><span class="line">                  <span class="string">&#x27;name&#x27;</span>: [<span class="string">&#x27;conv00&#x27;</span>, <span class="string">&#x27;conv00d&#x27;</span>,</span><br><span class="line">                           <span class="string">&#x27;conv10&#x27;</span>, <span class="string">&#x27;conv11&#x27;</span>, <span class="string">&#x27;conv11d&#x27;</span>,</span><br><span class="line">                           <span class="string">&#x27;conv20&#x27;</span>, <span class="string">&#x27;conv21&#x27;</span>, <span class="string">&#x27;conv22&#x27;</span>, <span class="string">&#x27;conv23&#x27;</span>, <span class="string">&#x27;conv23d&#x27;</span>,</span><br><span class="line">                           <span class="string">&#x27;conv30&#x27;</span>, <span class="string">&#x27;conv31&#x27;</span>, <span class="string">&#x27;conv32&#x27;</span>, <span class="string">&#x27;conv33&#x27;</span>, <span class="string">&#x27;conv34&#x27;</span>, <span class="string">&#x27;conv35&#x27;</span>, <span class="string">&#x27;conv36&#x27;</span>, <span class="string">&#x27;conv37&#x27;</span>,</span><br><span class="line">                           <span class="string">&#x27;conv38&#x27;</span>, <span class="string">&#x27;conv39&#x27;</span>, <span class="string">&#x27;conv310&#x27;</span>, <span class="string">&#x27;conv311&#x27;</span>, <span class="string">&#x27;conv312&#x27;</span>, <span class="string">&#x27;conv313&#x27;</span>, <span class="string">&#x27;conv314&#x27;</span>, <span class="string">&#x27;conv315&#x27;</span>,</span><br><span class="line">                           <span class="comment"># &#x27;yoloS0&#x27;, &#x27;yoloS1&#x27;, &#x27;yoloS2&#x27;, &#x27;yoloS3&#x27;, &#x27;yoloS4&#x27;, &#x27;yoloS5&#x27;, &#x27;yoloS6&#x27;,</span></span><br><span class="line">                           <span class="string">&#x27;conv40d&#x27;</span>, <span class="string">&#x27;conv40&#x27;</span>, <span class="string">&#x27;conv41&#x27;</span>, <span class="string">&#x27;conv42&#x27;</span>, <span class="string">&#x27;conv43&#x27;</span>, <span class="string">&#x27;conv44&#x27;</span>, <span class="string">&#x27;conv45&#x27;</span>, <span class="string">&#x27;conv46&#x27;</span>,</span><br><span class="line">                           <span class="string">&#x27;conv47&#x27;</span>, <span class="string">&#x27;conv48&#x27;</span>, <span class="string">&#x27;conv49&#x27;</span>, <span class="string">&#x27;conv410&#x27;</span>, <span class="string">&#x27;conv411&#x27;</span>, <span class="string">&#x27;conv412&#x27;</span>, <span class="string">&#x27;conv413&#x27;</span>, <span class="string">&#x27;conv414&#x27;</span>, <span class="string">&#x27;conv415&#x27;</span>,</span><br><span class="line">                           <span class="comment"># &#x27;yoloM0&#x27;, &#x27;yoloM1&#x27;, &#x27;yoloM2&#x27;, &#x27;yoloM3&#x27;, &#x27;yoloM4&#x27;, &#x27;yoloM5&#x27;, &#x27;yoloM6&#x27;,</span></span><br><span class="line">                           <span class="string">&#x27;conv50d&#x27;</span>, <span class="string">&#x27;conv50&#x27;</span>, <span class="string">&#x27;conv51&#x27;</span>, <span class="string">&#x27;conv52&#x27;</span>, <span class="string">&#x27;conv53&#x27;</span>, <span class="string">&#x27;conv50&#x27;</span>, <span class="string">&#x27;conv51&#x27;</span>, <span class="string">&#x27;conv52&#x27;</span>, <span class="string">&#x27;conv53&#x27;</span>,</span><br><span class="line">                           <span class="comment"># &#x27;yoloL0&#x27;, &#x27;yoloL1&#x27;, &#x27;yoloL2&#x27;, &#x27;yoloL3&#x27;, &#x27;yoloL4&#x27;, &#x27;yoloL5&#x27;, &#x27;yoloL6&#x27;]&#125;,</span></span><br><span class="line">    <span class="string">&#x27;mobilenetv2&#x27;</span>: &#123;<span class="string">&#x27;parameters&#x27;</span>: [</span><br><span class="line">                        <span class="comment"># stage 0</span></span><br><span class="line">                        [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>],</span><br><span class="line">                        <span class="comment"># stage 1</span></span><br><span class="line">                        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">                        <span class="comment"># stage 2</span></span><br><span class="line">                        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">                        <span class="comment"># stage 3</span></span><br><span class="line">                        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">                        <span class="comment"># [1, 1, 0], [3, 1, 1], [1, 1, 0], [3, 1, 1], [1, 1, 0], [3, 1, 1], [1, 1, 0], # yolo layers S</span></span><br><span class="line">                        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">                        <span class="comment"># stage 4</span></span><br><span class="line">                        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">                        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">                        <span class="comment"># [1, 1, 0], [3, 1, 1], [1, 1, 0], [3, 1, 1], [1, 1, 0], [3, 1, 1], [1, 1, 0],  # yolo layers M</span></span><br><span class="line">                        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">2</span>, <span class="number">0.5</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">                        <span class="comment"># stage 5</span></span><br><span class="line">                        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">                        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>], [<span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>]  <span class="comment"># yolo layers L</span></span><br><span class="line">    ],</span><br><span class="line">        <span class="string">&#x27;name&#x27;</span>: [<span class="string">&#x27;conv00d&#x27;</span>,</span><br><span class="line">                 <span class="string">&#x27;conv10&#x27;</span>, <span class="string">&#x27;conv11&#x27;</span>, <span class="string">&#x27;conv12&#x27;</span>, <span class="string">&#x27;conv13&#x27;</span>, <span class="string">&#x27;conv14&#x27;</span>, <span class="string">&#x27;conv15d&#x27;</span>,</span><br><span class="line">                 <span class="string">&#x27;conv20&#x27;</span>, <span class="string">&#x27;conv21&#x27;</span>, <span class="string">&#x27;conv22&#x27;</span>, <span class="string">&#x27;conv23&#x27;</span>, <span class="string">&#x27;conv24&#x27;</span>, <span class="string">&#x27;conv25d&#x27;</span>,</span><br><span class="line">                 <span class="string">&#x27;conv30&#x27;</span>, <span class="string">&#x27;conv31&#x27;</span>, <span class="string">&#x27;conv32&#x27;</span>, <span class="string">&#x27;conv33&#x27;</span>, <span class="string">&#x27;conv34&#x27;</span>, <span class="string">&#x27;conv35&#x27;</span>,</span><br><span class="line">                 <span class="comment"># &#x27;yoloS0&#x27;, &#x27;yoloS1&#x27;, &#x27;yoloS2&#x27;, &#x27;yoloS3&#x27;, &#x27;yoloS4&#x27;, &#x27;yoloS5&#x27;, &#x27;yoloS6&#x27;,</span></span><br><span class="line">                 <span class="string">&#x27;conv36&#x27;</span>, <span class="string">&#x27;conv37&#x27;</span>, <span class="string">&#x27;conv38d&#x27;</span>,</span><br><span class="line">                 <span class="string">&#x27;conv40&#x27;</span>, <span class="string">&#x27;conv41&#x27;</span>, <span class="string">&#x27;conv42&#x27;</span>, <span class="string">&#x27;conv43&#x27;</span>, <span class="string">&#x27;conv44&#x27;</span>, <span class="string">&#x27;conv45&#x27;</span>, <span class="string">&#x27;conv46&#x27;</span>, <span class="string">&#x27;conv47&#x27;</span>, <span class="string">&#x27;conv48&#x27;</span>,</span><br><span class="line">                 <span class="string">&#x27;conv49&#x27;</span>, <span class="string">&#x27;conv410&#x27;</span>, <span class="string">&#x27;conv411&#x27;</span>, <span class="string">&#x27;conv412&#x27;</span>, <span class="string">&#x27;conv413&#x27;</span>, <span class="string">&#x27;conv414&#x27;</span>, <span class="string">&#x27;conv415&#x27;</span>, <span class="string">&#x27;conv416&#x27;</span>, <span class="string">&#x27;conv417&#x27;</span>,</span><br><span class="line">                 <span class="comment"># &#x27;yoloM0&#x27;, &#x27;yoloM1&#x27;, &#x27;yoloM2&#x27;, &#x27;yoloM3&#x27;, &#x27;yoloM4&#x27;, &#x27;yoloM5&#x27;, &#x27;yoloM6&#x27;,</span></span><br><span class="line">                 <span class="string">&#x27;conv418&#x27;</span>, <span class="string">&#x27;conv419&#x27;</span>, <span class="string">&#x27;conv420d&#x27;</span>,</span><br><span class="line">                 <span class="string">&#x27;conv50&#x27;</span>, <span class="string">&#x27;conv51&#x27;</span>, <span class="string">&#x27;conv52&#x27;</span>, <span class="string">&#x27;conv53&#x27;</span>, <span class="string">&#x27;conv54&#x27;</span>, <span class="string">&#x27;conv55&#x27;</span>, <span class="string">&#x27;conv56&#x27;</span>, <span class="string">&#x27;conv57&#x27;</span>, <span class="string">&#x27;conv58&#x27;</span>, <span class="string">&#x27;conv59&#x27;</span>,</span><br><span class="line">                 <span class="comment"># &#x27;yoloL0&#x27;, &#x27;yoloL1&#x27;, &#x27;yoloL2&#x27;, &#x27;yoloL3&#x27;, &#x27;yoloL4&#x27;, &#x27;yoloL5&#x27;, &#x27;yoloL6&#x27;</span></span><br><span class="line">                 ]&#125;&#125;</span><br><span class="line"></span><br><span class="line">        self.imsize = img_input_size</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_outsize</span>(<span class="params">self, net, layernum</span>):</span></span><br><span class="line">    insize = np.array(self.imsize, dtype=int)</span><br><span class="line">    outsize = []</span><br><span class="line">    stride_total = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> layer <span class="keyword">in</span> range(layernum):</span><br><span class="line">        filter_size, stride, padding = net[layer]</span><br><span class="line">        outsize = (insize - filter_size + <span class="number">2</span> * padding) / stride + <span class="number">1</span></span><br><span class="line">        insize = outsize</span><br><span class="line">        stride_total = stride_total * stride</span><br><span class="line">    <span class="keyword">return</span> outsize, stride_total</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inFromOut</span>(<span class="params">self, net, layernum</span>):</span></span><br><span class="line">    receptive_field = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> layer <span class="keyword">in</span> reversed(range(layernum)):</span><br><span class="line">        filter_size, stride, padding = net[layer]</span><br><span class="line">        receptive_field = ((receptive_field - <span class="number">1</span>) * stride) + filter_size</span><br><span class="line">    <span class="keyword">return</span> receptive_field</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_receptive_field</span>(<span class="params">self, net</span>):</span></span><br><span class="line">    print(<span class="string">&quot;neutral network feeded with image size: &#123;&#125; * &#123;&#125;&quot;</span>.format(self.imsize[<span class="number">0</span>], self.imsize[<span class="number">1</span>]))</span><br><span class="line">    <span class="comment"># choose one network to analyse it&#x27;s respective field</span></span><br><span class="line">    network = self.networks[net][<span class="string">&#x27;parameters&#x27;</span>]</span><br><span class="line">    print(net)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(network)):</span><br><span class="line">        outsize, stride_total = self.compute_outsize(network, i + <span class="number">1</span>)</span><br><span class="line">        receptive_field = self.inFromOut(network, i + <span class="number">1</span>)</span><br><span class="line">        print(<span class="string">&quot;Layer Name = %8s, Output size = %4.1d * %3.1d, Stride = %2.1d, RF size = %2.1d&quot;</span> % (</span><br><span class="line">            self.networks[net][<span class="string">&#x27;name&#x27;</span>][i], outsize[<span class="number">0</span>], outsize[<span class="number">1</span>], stride_total, receptive_field))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    imsize = [<span class="number">832</span>, <span class="number">1024</span>]</span><br><span class="line">    networks = networkReceptiveField(imsize)</span><br><span class="line">    <span class="comment"># alexnet, vgg16, darknet53(with yolov3 layers), mobilenetv2(with yolov3 layers)</span></span><br><span class="line">    <span class="comment"># in order to analyse the full receptive field with yolo layer,</span></span><br><span class="line">    <span class="comment"># you need uncomment the corresponding layers in self.networks &#x27;parameters&#x27;</span></span><br><span class="line">    networks.get_receptive_field(<span class="string">&#x27;vgg16&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">layer output sizes given image = <span class="number">1024</span> x <span class="number">1024</span></span><br><span class="line">****************** YOLO V3 <span class="keyword">with</span> Backbone Darknet53*******************</span><br><span class="line">stage <span class="number">0</span> ============================================================</span><br><span class="line">Layer Name =   conv00, Output size = <span class="number">1024</span>, Stride =  <span class="number">1</span>, RF size =  <span class="number">3</span></span><br><span class="line">Layer Name =  conv00d, Output size =  <span class="number">512</span>, Stride =  <span class="number">2</span>, RF size =  <span class="number">5</span></span><br><span class="line">stage <span class="number">1</span> ============================================================</span><br><span class="line">Layer Name =   conv10, Output size =  <span class="number">512</span>, Stride =  <span class="number">2</span>, RF size =  <span class="number">5</span></span><br><span class="line">Layer Name =   conv11, Output size =  <span class="number">512</span>, Stride =  <span class="number">2</span>, RF size =  <span class="number">9</span></span><br><span class="line">Layer Name =  conv11d, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">13</span></span><br><span class="line">stage <span class="number">2</span> ============================================================</span><br><span class="line">Layer Name =   conv20, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">13</span></span><br><span class="line">Layer Name =   conv21, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">21</span></span><br><span class="line">Layer Name =   conv22, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">21</span></span><br><span class="line">Layer Name =   conv23, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">29</span></span><br><span class="line">Layer Name =  conv23d, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">37</span></span><br><span class="line">stage <span class="number">3</span> ============================================================</span><br><span class="line">Layer Name =   conv30, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">37</span></span><br><span class="line">Layer Name =   conv31, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">53</span></span><br><span class="line">Layer Name =   conv32, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">53</span></span><br><span class="line">Layer Name =   conv33, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">69</span></span><br><span class="line">Layer Name =   conv34, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">69</span></span><br><span class="line">Layer Name =   conv35, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">85</span></span><br><span class="line">Layer Name =   conv36, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">85</span></span><br><span class="line">Layer Name =   conv37, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">101</span></span><br><span class="line">Layer Name =   conv38, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">101</span></span><br><span class="line">Layer Name =   conv39, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">117</span></span><br><span class="line">Layer Name =  conv310, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">117</span></span><br><span class="line">Layer Name =  conv311, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">133</span></span><br><span class="line">Layer Name =  conv312, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">133</span></span><br><span class="line">Layer Name =  conv313, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">149</span></span><br><span class="line">Layer Name =  conv314, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">149</span></span><br><span class="line">Layer Name =  conv315, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">165</span></span><br><span class="line">*****************************branch <span class="number">1</span>********************************</span><br><span class="line">Layer Name =   yoloS0, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">165</span></span><br><span class="line">Layer Name =   yoloS1, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">181</span></span><br><span class="line">Layer Name =   yoloS2, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">181</span></span><br><span class="line">Layer Name =   yoloS3, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">197</span></span><br><span class="line">Layer Name =   yoloS4, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">197</span></span><br><span class="line">Layer Name =   yoloS5, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">213</span></span><br><span class="line">Layer Name =   yoloS6, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">213</span></span><br><span class="line">stage <span class="number">4</span> ============================================================</span><br><span class="line">Layer Name =  conv40d, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">181</span></span><br><span class="line">Layer Name =   conv40, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">181</span></span><br><span class="line">Layer Name =   conv41, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">213</span></span><br><span class="line">Layer Name =   conv42, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">213</span></span><br><span class="line">Layer Name =   conv43, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">245</span></span><br><span class="line">Layer Name =   conv44, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">245</span></span><br><span class="line">Layer Name =   conv45, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">277</span></span><br><span class="line">Layer Name =   conv46, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">277</span></span><br><span class="line">Layer Name =   conv47, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">309</span></span><br><span class="line">Layer Name =   conv48, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">309</span></span><br><span class="line">Layer Name =   conv49, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">341</span></span><br><span class="line">Layer Name =  conv410, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">341</span></span><br><span class="line">Layer Name =  conv411, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">373</span></span><br><span class="line">Layer Name =  conv412, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">373</span></span><br><span class="line">Layer Name =  conv413, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">405</span></span><br><span class="line">Layer Name =  conv414, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">405</span></span><br><span class="line">Layer Name =  conv415, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">437</span></span><br><span class="line">*****************************branch <span class="number">2</span>********************************</span><br><span class="line">Layer Name =   yoloM0, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">437</span></span><br><span class="line">Layer Name =   yoloM1, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">469</span></span><br><span class="line">Layer Name =   yoloM2, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">469</span></span><br><span class="line">Layer Name =   yoloM3, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">501</span></span><br><span class="line">Layer Name =   yoloM4, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">501</span></span><br><span class="line">Layer Name =   yoloM5, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">533</span></span><br><span class="line">Layer Name =   yoloM6, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">533</span></span><br><span class="line">stage <span class="number">5</span> ============================================================</span><br><span class="line">Layer Name =  conv50d, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">469</span></span><br><span class="line">Layer Name =   conv50, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">469</span></span><br><span class="line">Layer Name =   conv51, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">533</span></span><br><span class="line">Layer Name =   conv52, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">533</span></span><br><span class="line">Layer Name =   conv53, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">597</span></span><br><span class="line">Layer Name =   conv50, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">597</span></span><br><span class="line">Layer Name =   conv51, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">661</span></span><br><span class="line">Layer Name =   conv52, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">661</span></span><br><span class="line">Layer Name =   conv53, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">725</span></span><br><span class="line">*****************************branch <span class="number">3</span>********************************</span><br><span class="line">Layer Name =   yoloL0, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">725</span></span><br><span class="line">Layer Name =   yoloL1, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">789</span></span><br><span class="line">Layer Name =   yoloL2, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">789</span></span><br><span class="line">Layer Name =   yoloL3, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">853</span></span><br><span class="line">Layer Name =   yoloL4, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">853</span></span><br><span class="line">Layer Name =   yoloL5, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">917</span></span><br><span class="line">Layer Name =   yoloL6, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">917</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">layer output sizes given image = <span class="number">1024</span> x <span class="number">1024</span></span><br><span class="line">************ YOLO V3 <span class="keyword">with</span> backbone mobilenetv2 **************</span><br><span class="line">stage <span class="number">0</span> ============================================================</span><br><span class="line">Layer Name =  conv00d, Output size =  <span class="number">512</span>, Stride =  <span class="number">2</span>, RF size =  <span class="number">3</span></span><br><span class="line">stage <span class="number">1</span> ============================================================</span><br><span class="line">Layer Name =   conv10, Output size =  <span class="number">512</span>, Stride =  <span class="number">2</span>, RF size =  <span class="number">3</span></span><br><span class="line">Layer Name =   conv11, Output size =  <span class="number">512</span>, Stride =  <span class="number">2</span>, RF size =  <span class="number">7</span></span><br><span class="line">Layer Name =   conv12, Output size =  <span class="number">512</span>, Stride =  <span class="number">2</span>, RF size =  <span class="number">7</span></span><br><span class="line">Layer Name =   conv13, Output size =  <span class="number">512</span>, Stride =  <span class="number">2</span>, RF size =  <span class="number">7</span></span><br><span class="line">Layer Name =   conv14, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">11</span></span><br><span class="line">Layer Name =  conv15d, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">11</span></span><br><span class="line">stage <span class="number">2</span> ============================================================</span><br><span class="line">Layer Name =   conv20, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">11</span></span><br><span class="line">Layer Name =   conv21, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">19</span></span><br><span class="line">Layer Name =   conv22, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">19</span></span><br><span class="line">Layer Name =   conv23, Output size =  <span class="number">256</span>, Stride =  <span class="number">4</span>, RF size = <span class="number">19</span></span><br><span class="line">Layer Name =   conv24, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">27</span></span><br><span class="line">Layer Name =  conv25d, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">27</span></span><br><span class="line">stage <span class="number">3</span> ============================================================</span><br><span class="line">Layer Name =   conv30, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">27</span></span><br><span class="line">Layer Name =   conv31, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">43</span></span><br><span class="line">Layer Name =   conv32, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">43</span></span><br><span class="line">Layer Name =   conv33, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">43</span></span><br><span class="line">Layer Name =   conv34, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">59</span></span><br><span class="line">Layer Name =   conv35, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">59</span></span><br><span class="line">*****************************branch <span class="number">1</span>********************************</span><br><span class="line">Layer Name =   yoloS0, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">59</span></span><br><span class="line">Layer Name =   yoloS1, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">75</span></span><br><span class="line">Layer Name =   yoloS2, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">75</span></span><br><span class="line">Layer Name =   yoloS3, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">91</span></span><br><span class="line">Layer Name =   yoloS4, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">91</span></span><br><span class="line">Layer Name =   yoloS5, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">107</span></span><br><span class="line">Layer Name =   yoloS6, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">107</span></span><br><span class="line"></span><br><span class="line">Layer Name =   conv36, Output size =  <span class="number">128</span>, Stride =  <span class="number">8</span>, RF size = <span class="number">59</span></span><br><span class="line">Layer Name =   conv37, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">75</span></span><br><span class="line">Layer Name =  conv38d, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">75</span></span><br><span class="line">stage <span class="number">4</span> ============================================================</span><br><span class="line">Layer Name =   conv40, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">75</span></span><br><span class="line">Layer Name =   conv41, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">107</span></span><br><span class="line">Layer Name =   conv42, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">107</span></span><br><span class="line">Layer Name =   conv43, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">107</span></span><br><span class="line">Layer Name =   conv44, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">139</span></span><br><span class="line">Layer Name =   conv45, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">139</span></span><br><span class="line">Layer Name =   conv46, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">139</span></span><br><span class="line">Layer Name =   conv47, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">171</span></span><br><span class="line">Layer Name =   conv48, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">171</span></span><br><span class="line">Layer Name =   conv49, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">171</span></span><br><span class="line">Layer Name =  conv410, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">203</span></span><br><span class="line">Layer Name =  conv411, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">203</span></span><br><span class="line">Layer Name =  conv412, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">203</span></span><br><span class="line">Layer Name =  conv413, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">235</span></span><br><span class="line">Layer Name =  conv414, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">235</span></span><br><span class="line">Layer Name =  conv415, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">235</span></span><br><span class="line">Layer Name =  conv416, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">267</span></span><br><span class="line">Layer Name =  conv417, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">267</span></span><br><span class="line">*****************************branch <span class="number">2</span>********************************</span><br><span class="line">Layer Name =   yoloM0, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">267</span></span><br><span class="line">Layer Name =   yoloM1, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">299</span></span><br><span class="line">Layer Name =   yoloM2, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">299</span></span><br><span class="line">Layer Name =   yoloM3, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">331</span></span><br><span class="line">Layer Name =   yoloM4, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">331</span></span><br><span class="line">Layer Name =   yoloM5, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">363</span></span><br><span class="line">Layer Name =   yoloM6, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">363</span></span><br><span class="line"></span><br><span class="line">Layer Name =  conv418, Output size =   <span class="number">64</span>, Stride = <span class="number">16</span>, RF size = <span class="number">267</span></span><br><span class="line">Layer Name =  conv419, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">299</span></span><br><span class="line">Layer Name = conv420d, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">299</span></span><br><span class="line">stage <span class="number">5</span> ============================================================</span><br><span class="line">Layer Name =   conv50, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">299</span></span><br><span class="line">Layer Name =   conv51, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">363</span></span><br><span class="line">Layer Name =   conv52, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">363</span></span><br><span class="line">Layer Name =   conv53, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">363</span></span><br><span class="line">Layer Name =   conv54, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">427</span></span><br><span class="line">Layer Name =   conv55, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">427</span></span><br><span class="line">Layer Name =   conv56, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">427</span></span><br><span class="line">Layer Name =   conv57, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">491</span></span><br><span class="line">Layer Name =   conv58, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">491</span></span><br><span class="line">Layer Name =   conv59, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">491</span></span><br><span class="line">*****************************branch <span class="number">3</span>********************************</span><br><span class="line">Layer Name =   yoloL0, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">491</span></span><br><span class="line">Layer Name =   yoloL1, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">555</span></span><br><span class="line">Layer Name =   yoloL2, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">555</span></span><br><span class="line">Layer Name =   yoloL3, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">619</span></span><br><span class="line">Layer Name =   yoloL4, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">619</span></span><br><span class="line">Layer Name =   yoloL5, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">683</span></span><br><span class="line">Layer Name =   yoloL6, Output size =   <span class="number">32</span>, Stride = <span class="number">32</span>, RF size = <span class="number">683</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>技术分享</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="Xinjie 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Xinjie
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xinjieinformatik.github.io/2020/09/26/receptive-field/" title="感受野计算">https://xinjieinformatik.github.io/2020/09/26/receptive-field/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%84%9F%E5%8F%97%E9%87%8E%E8%AE%A1%E7%AE%97/" rel="tag"># 感受野计算</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/26/morphology/" rel="prev" title="形态学过滤图片噪点">
+      <i class="fa fa-chevron-left"></i> 形态学过滤图片噪点
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/26/convolution-FLOPs/" rel="next" title="convolution-FLOPs">
+      convolution-FLOPs <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+ 
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+       
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#感受野计算"><span class="nav-text">感受野计算</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Xinjie"
+      src="/images/dog.png">
+  <p class="site-author-name" itemprop="name">Xinjie</p>
+  <div class="site-description" itemprop="description">欢迎访问我的技术博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XinjieInformatik" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XinjieInformatik" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      <!--
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=427606780&auto=1&height=66"></iframe>
+      -->
+      <div id="">
+      <canvas id="canvas" style="width:60%;">
+      </div>
+      <script type="text/javascript" src="/js/canvas-dance-time.js"></script>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+  
+
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div id="days"></div>
+<script>
+function show_date_time(){
+    window.setTimeout("show_date_time()", 1000);
+    BirthDay=new Date("09/09/2020 08:13:14");//修改为自己的blog建站时间
+    today=new Date();
+    timeold=(today.getTime()-BirthDay.getTime());
+    sectimeold=timeold/1000
+    secondsold=Math.floor(sectimeold);
+    msPerDay=24*60*60*1000
+    e_daysold=timeold/msPerDay
+    daysold=Math.floor(e_daysold);
+    e_hrsold=(e_daysold-daysold)*24;
+    hrsold=setzero(Math.floor(e_hrsold));
+    e_minsold=(e_hrsold-hrsold)*60;
+    minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+    seconds=setzero(Math.floor((e_minsold-minsold)*60));
+    document.getElementById('days').innerHTML="本站已安全运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+function setzero(i){
+    if (i<10)
+    {i="0" + i};
+    return i;
+}
+show_date_time();
+</script>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xinjie</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">74k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:07</span>
+</div>
+<!--
+--!>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://xinjieinformatik.github.io/2020/09/26/receptive-field/',]
+      });
+      });
+  </script>
+ 
+  
+
+  <script async src="/js/cursor.js"></script> 
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'a054acd527b7f50a7920',
+      clientSecret: '2f3218b7d2f9dd1ed5ccd36593a3572a9c4d28d3',
+      repo        : 'gitalks_comments',
+      owner       : 'XinjieInformatik',
+      admin       : ['XinjieInformatik'],
+      id          : '7a802c2f35d0b40b998c25d0c936117a',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

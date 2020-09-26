@@ -302,6 +302,279 @@
   
  
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/26/convolution-FLOPs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/dog.png">
+      <meta itemprop="name" content="Xinjie">
+      <meta itemprop="description" content="欢迎访问我的技术博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="昕杰技术小站">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/26/convolution-FLOPs/" class="post-title-link" itemprop="url">convolution-FLOPs</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-26 23:59:22" itemprop="dateCreated datePublished" datetime="2020-09-26T23:59:22+08:00">2020-09-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-27 00:34:38" itemprop="dateModified" datetime="2020-09-27T00:34:38+08:00">2020-09-27</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="卷积FLOPs与参数量计算"><a href="#卷积FLOPs与参数量计算" class="headerlink" title="卷积FLOPs与参数量计算"></a>卷积FLOPs与参数量计算</h1><p>这篇blog介绍卷积神经网络参数量与运算量计算，深度可分离卷积的参数量与运算量计算。这些都是分析网络性能的重要参数，也是面试常考问题。。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/26/convolution-FLOPs/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+ 
+      
+  
+  
+  
+ 
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/26/receptive-field/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/dog.png">
+      <meta itemprop="name" content="Xinjie">
+      <meta itemprop="description" content="欢迎访问我的技术博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="昕杰技术小站">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/26/receptive-field/" class="post-title-link" itemprop="url">感受野计算</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-26 23:29:33 / 修改时间：23:56:40" itemprop="dateCreated datePublished" datetime="2020-09-26T23:29:33+08:00">2020-09-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>16 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="感受野计算"><a href="#感受野计算" class="headerlink" title="感受野计算"></a>感受野计算</h1><p>图像里，感受野是一个比较基础的概念了。如果图片中有许多大物体，那至少要保证感受野大于等于大物体的尺度。这篇blog给出理论感受野的计算方式，计算是从后往前递推的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/26/receptive-field/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+ 
+      
+  
+  
+  
+ 
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/26/morphology/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/dog.png">
+      <meta itemprop="name" content="Xinjie">
+      <meta itemprop="description" content="欢迎访问我的技术博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="昕杰技术小站">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/26/morphology/" class="post-title-link" itemprop="url">形态学过滤图片噪点</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-26 23:18:00 / 修改时间：23:34:41" itemprop="dateCreated datePublished" datetime="2020-09-26T23:18:00+08:00">2020-09-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="形态学过滤图片噪点"><a href="#形态学过滤图片噪点" class="headerlink" title="形态学过滤图片噪点"></a>形态学过滤图片噪点</h1><p>过滤图片噪点的两个思路 1. 滤波 2. 形态学中的腐蚀,膨胀,开运算,闭运算。这篇blog总结下形态学中的常用操作。效果还是很明显的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/26/morphology/" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+ 
+      
+  
+  
+  
+ 
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/26/detection3D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -864,304 +1137,6 @@
   
   
  
-      
-  
-  
-  
- 
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/14/sql-base/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/dog.png">
-      <meta itemprop="name" content="Xinjie">
-      <meta itemprop="description" content="欢迎访问我的技术博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="昕杰技术小站">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/14/sql-base/" class="post-title-link" itemprop="url">SQL基础</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-14 22:38:17" itemprop="dateCreated datePublished" datetime="2020-09-14T22:38:17+08:00">2020-09-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-15 12:12:21" itemprop="dateModified" datetime="2020-09-15T12:12:21+08:00">2020-09-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/SQL/" itemprop="url" rel="index"><span itemprop="name">SQL</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.6k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="SQL基础"><a href="#SQL基础" class="headerlink" title="SQL基础"></a>SQL基础</h1><p>花1-2天时间，简单把SQL语法过一下吧</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/14/sql-base/" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
- 
-      
-  
-  
-  
- 
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/14/computer-vision-overview/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/dog.png">
-      <meta itemprop="name" content="Xinjie">
-      <meta itemprop="description" content="欢迎访问我的技术博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="昕杰技术小站">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/14/computer-vision-overview/" class="post-title-link" itemprop="url">计算机视觉总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-14 15:51:08" itemprop="dateCreated datePublished" datetime="2020-09-14T15:51:08+08:00">2020-09-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-26 18:12:35" itemprop="dateModified" datetime="2020-09-26T18:12:35+08:00">2020-09-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>8.6k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>8 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="计算机视觉总结"><a href="#计算机视觉总结" class="headerlink" title="计算机视觉总结"></a>计算机视觉总结</h1><p>研究生阶段一直在做计算机视觉方面的研究，想把积累的一些知识梳理总结下，这方面的知识繁多，触类旁通，只能说试着总结记录在这篇blog中。计算机视觉方面的研究很容易给人带来兴趣。从传统数字图像处理到AI深度学习，计算机视觉方面的研究一直是各个领域中的领头羊，其一些成熟的经验也对语音，推荐等方面有较好的借鉴价值。有些人说AI的噱头也很大，但我自己真正比较过，不得不说深度学习真的给计算进一步理解图片带来很大的进步。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/14/computer-vision-overview/" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
- 
-      
-  
-  
-  
- 
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/13/matrix-dfs/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/dog.png">
-      <meta itemprop="name" content="Xinjie">
-      <meta itemprop="description" content="欢迎访问我的技术博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="昕杰技术小站">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/13/matrix-dfs/" class="post-title-link" itemprop="url">矩阵的搜索专题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-13 21:31:47" itemprop="dateCreated datePublished" datetime="2020-09-13T21:31:47+08:00">2020-09-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-15 22:11:33" itemprop="dateModified" datetime="2020-09-15T22:11:33+08:00">2020-09-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">算法练习</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>11k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>10 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="矩阵的搜索专题"><a href="#矩阵的搜索专题" class="headerlink" title="矩阵的搜索专题"></a>矩阵的搜索专题</h1><p>在二维或多维矩阵上做广度或者深度优先搜索算是比较经典的题了，但是因为不熟练，往往写的时间会耽搁，这里总结一下几道常见的矩阵dfs bfs搜索的题目，做个总结。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/13/matrix-dfs/" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
- 
 
   
   <nav class="pagination">
@@ -1233,7 +1208,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1246,7 +1221,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1324,12 +1299,12 @@ show_date_time();
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">50k</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">46 分钟</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
 <!--
 --!>

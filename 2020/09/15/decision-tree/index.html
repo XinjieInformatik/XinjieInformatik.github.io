@@ -33,8 +33,9 @@
 <meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/15/decision-tree/20200714_172640_17.png">
 <meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/15/decision-tree/20200714_174803_81.png">
 <meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/15/decision-tree/20200715_172149_44.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/15/decision-tree/20200921_103652_79.png">
 <meta property="article:published_time" content="2020-09-15T09:09:27.000Z">
-<meta property="article:modified_time" content="2020-09-26T11:04:44.605Z">
+<meta property="article:modified_time" content="2020-09-26T13:17:57.367Z">
 <meta property="article:author" content="Xinjie">
 <meta property="article:tag" content="决策树">
 <meta property="article:tag" content="GBDT">
@@ -241,7 +242,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-26 19:04:44" itemprop="dateModified" datetime="2020-09-26T19:04:44+08:00">2020-09-26</time>
+                <time title="修改时间：2020-09-26 21:17:57" itemprop="dateModified" datetime="2020-09-26T21:17:57+08:00">2020-09-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -362,6 +363,7 @@
 </ul>
 <p>近似算法: 上述算法可以得到最优解，但计算量大. 对于每个特征，只考察分位点可以减少计算复杂度.<br>根据分位数采样得到分割点的候选集合S, 将特征k的值根据集合Sk划分到桶(bucket)中，接着对每个桶内样本的增益(梯度G,H)进行累加统计，最后在这些累计的统计量上寻找最佳分裂点。<br>除此之外还有带权重(基于梯度)的分位方案.</p>
 <p>参考: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/105612830">https://zhuanlan.zhihu.com/p/105612830</a><br><a target="_blank" rel="noopener" href="https://yxzf.github.io/2017/04/xgboost-v2/">https://yxzf.github.io/2017/04/xgboost-v2/</a></p>
+<h3 id="XGBoost-公式推导"><a href="#XGBoost-公式推导" class="headerlink" title="XGBoost 公式推导"></a>XGBoost 公式推导</h3><p><img data-src="/2020/09/15/decision-tree/20200921_103652_79.png" alt="20200921_103652_79"></p>
 <h3 id="随机森林-RF"><a href="#随机森林-RF" class="headerlink" title="随机森林 RF"></a>随机森林 RF</h3><p>使用bagging的方法，每次对数据集有放回的随机采样，使用一部分数据训练不同的基学习器，最后再集成起来.<br>随机森林使用CART作为基学习器,不同的是,RF随机选择节点上的一部分特征𝑛𝑠𝑢𝑏，然后在这些随机选择的𝑛𝑠𝑢𝑏个样本特征中，选择一个最优的特征来做决策树的左右子树划分。(nsub越小,模型方差越小,偏差越大.一般通过交叉验证调参获取合适的𝑛𝑠𝑢𝑏) 也可以随机混合使用ID3 C4.5 CART.<br>如果是分类，则T个弱学习器投出最多票数的类别为最终类别。如果是回归，T个弱学习器得到的回归结果进行算术平均得到的值为最终的模型输出。<br>优点:</p>
 <ol>
 <li>训练与预测过程可以高度并行化</li>
@@ -510,7 +512,7 @@
        
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#决策树-GBDT-XGBOOST-RF"><span class="nav-text">决策树 GBDT XGBOOST RF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#决策树-ID3-C4-5-CART"><span class="nav-text">决策树 ID3 C4.5 CART</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CART"><span class="nav-text">CART</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CART分类树对连续特征的处理"><span class="nav-text">CART分类树对连续特征的处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#建立CART分类树"><span class="nav-text">建立CART分类树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#建立CART回归树"><span class="nav-text">建立CART回归树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CART树建树时间复杂度"><span class="nav-text">CART树建树时间复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#剪枝"><span class="nav-text">剪枝</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GBDT"><span class="nav-text">GBDT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XGBoost"><span class="nav-text">XGBoost</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GBDT-XGBoost区别"><span class="nav-text">GBDT, XGBoost区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost-并行"><span class="nav-text">XGBoost 并行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost-损失函数"><span class="nav-text">XGBoost 损失函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost防止过拟合的方法"><span class="nav-text">XGBoost防止过拟合的方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#xgboost-特征重要性筛选"><span class="nav-text">xgboost 特征重要性筛选</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不需要归一化原因"><span class="nav-text">不需要归一化原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost如何处理缺失值"><span class="nav-text">XGBoost如何处理缺失值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost中的一棵树的停止生长条件"><span class="nav-text">XGBoost中的一棵树的停止生长条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最优切分点划分算法"><span class="nav-text">最优切分点划分算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机森林-RF"><span class="nav-text">随机森林 RF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RF和GBDT的区别"><span class="nav-text">RF和GBDT的区别</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LightGBM和XGBoost的区别？"><span class="nav-text">LightGBM和XGBoost的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LR和GBDT比较，什么情景下GBDT不如LR"><span class="nav-text">LR和GBDT比较，什么情景下GBDT不如LR</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#决策树-GBDT-XGBOOST-RF"><span class="nav-text">决策树 GBDT XGBOOST RF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#决策树-ID3-C4-5-CART"><span class="nav-text">决策树 ID3 C4.5 CART</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CART"><span class="nav-text">CART</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CART分类树对连续特征的处理"><span class="nav-text">CART分类树对连续特征的处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#建立CART分类树"><span class="nav-text">建立CART分类树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#建立CART回归树"><span class="nav-text">建立CART回归树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CART树建树时间复杂度"><span class="nav-text">CART树建树时间复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#剪枝"><span class="nav-text">剪枝</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GBDT"><span class="nav-text">GBDT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XGBoost"><span class="nav-text">XGBoost</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GBDT-XGBoost区别"><span class="nav-text">GBDT, XGBoost区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost-并行"><span class="nav-text">XGBoost 并行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost-损失函数"><span class="nav-text">XGBoost 损失函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost防止过拟合的方法"><span class="nav-text">XGBoost防止过拟合的方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#xgboost-特征重要性筛选"><span class="nav-text">xgboost 特征重要性筛选</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不需要归一化原因"><span class="nav-text">不需要归一化原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost如何处理缺失值"><span class="nav-text">XGBoost如何处理缺失值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XGBoost中的一棵树的停止生长条件"><span class="nav-text">XGBoost中的一棵树的停止生长条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最优切分点划分算法"><span class="nav-text">最优切分点划分算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XGBoost-公式推导"><span class="nav-text">XGBoost 公式推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机森林-RF"><span class="nav-text">随机森林 RF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RF和GBDT的区别"><span class="nav-text">RF和GBDT的区别</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LightGBM和XGBoost的区别？"><span class="nav-text">LightGBM和XGBoost的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LR和GBDT比较，什么情景下GBDT不如LR"><span class="nav-text">LR和GBDT比较，什么情景下GBDT不如LR</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -526,7 +528,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -539,7 +541,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -617,12 +619,12 @@ show_date_time();
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">49k</span>
+    <span title="站点总字数">50k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">45 分钟</span>
+    <span title="站点阅读时长">46 分钟</span>
 </div>
 <!--
 --!>

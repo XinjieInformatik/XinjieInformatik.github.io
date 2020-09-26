@@ -40,11 +40,11 @@
 </ul>
 <p>递归次数R 退化至状态数n, 以斐波那契数列为例：<br><img data-src="/2020/09/11/recursion-complexity-analysis/fib_example.png" alt="fib_example"></p>
 <p>ps: 尾递归的好处是，它可以避免递归调用期间栈空间开销的累积 O(h)</p>
-<h2 id="主定理-时间复杂度分析"><a href="#主定理-时间复杂度分析" class="headerlink" title="主定理 - 时间复杂度分析"></a>主定理 - 时间复杂度分析</h2><p>T(问题规模) = 子问题数 <em> T(子问题规模) + 额外计算<br>T(n) = a </em> T(n/b) + f(n)<br>T(n) = a * T(n/b) + O(n^d)</p>
-<ul>
-<li>$d &lt; log_b^a, O(n^{log_b^a})$</li>
-<li>$d = log_b^a, O(n^d * logn)$</li>
-<li>$d &gt; log_b^a, O(n^d)$<br>(log 不标底默认为2)</li>
+<h2 id="主定理-时间复杂度分析"><a href="#主定理-时间复杂度分析" class="headerlink" title="主定理 - 时间复杂度分析"></a>主定理 - 时间复杂度分析</h2><p>T(问题规模) = 子问题数 * T(子问题规模) + 额外计算</p>
+<script type="math/tex; mode=display">T(n) = a T(\frac{n}{b}) + f(n)</script><script type="math/tex; mode=display">T(n) = a T(\frac{n}{b}) + O(n^d)</script><ul>
+<li><script type="math/tex; mode=display">d < log_b^a, O(n^{log_b^a})</script></li>
+<li><script type="math/tex; mode=display">d = log_b^a, O(n^d logn)</script></li>
+<li><script type="math/tex; mode=display">d > log_b^a, O(n^d)</script>(log 不标底默认为2)</li>
 </ul>
 <p>归并排序<br>T(n) = 2T(n/2) + O(n) —&gt; T(n) = O(nlogn)</p>
 <p>二分查找<br>T(n) = T(n/2) + O(1) —&gt; T(n) = O(logn)</p>
@@ -56,6 +56,54 @@
       <tags>
         <tag>递归</tag>
         <tag>复杂度分析</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>3D目标检测</title>
+    <url>/2020/09/26/detection3D/</url>
+    <content><![CDATA[<h1 id="3D-Detection"><a href="#3D-Detection" class="headerlink" title="3D Detection"></a>3D Detection</h1><p>3D目标检测是一个很重要的领域，对于2D检测，只需要求解图像坐标系下的u, v坐标与类别。3D目标检测真正涉及到了估计相机坐标下物体的$X_c, Y_c, Z_c$坐标，物体坐标系下$X_o, Y_o, Z_o$的物体大小还有物体姿态$\theta, \gamma, \alpha$。因此，对于3D目标检测<code>核心，如何求解3D相关的9个未知数:</code> $\theta, \gamma, \alpha, X_o, Y_o, Z_o, X_c, Y_c, Z_c$</p>
+<a id="more"></a>
+<h2 id="坐标系变换"><a href="#坐标系变换" class="headerlink" title="坐标系变换"></a>坐标系变换</h2><p><img data-src="/2020/09/26/detection3D/Detection_3D-c0027fb7.png" width="60%"></p>
+<p>齐次形式</p>
+<script type="math/tex; mode=display">\begin{bmatrix} u\\v\\1 \end{bmatrix} = \frac{1}{Z_c} * K *
+\begin{bmatrix} R^{3*3}&T^{3*1} \end{bmatrix} *
+\begin{bmatrix} X_o\\Y_o\\Z_o\\1 \end{bmatrix}</script><p>进一步描述外参 R, T</p>
+<script type="math/tex; mode=display">\begin{bmatrix} u\\v\\1 \end{bmatrix} = \frac{1}{Z_c} * K *
+\begin{bmatrix} cos\theta&0&sin\theta \\ 0&1&0 \\ -sin\theta&0&cos\theta \end{bmatrix} *
+\begin{bmatrix} X_o\\Y_o\\Z_o \end{bmatrix} +
+\begin{bmatrix} X_c\\Y_c\\Z_c \end{bmatrix}</script><p>像素坐标系: $u, v$<br>物体坐标系: $X_o, Y_o, Z_o (l, w, h)$<br>相机坐标系: $X_c, Y_c, Z_c$</p>
+<p><code>核心，如何求解3D相关的7个未知数:</code> $\theta, X_o, Y_o, Z_o, X_c, Y_c, Z_c$<br>其中 $\theta(r_y), X_c, Y_c, Z_c$最重要</p>
+<p><img data-src="/2020/09/26/detection3D/20200617_230254_99.png" alt="20200617_230254_99"></p>
+<h2 id="单目3D检测论文"><a href="#单目3D检测论文" class="headerlink" title="单目3D检测论文"></a>单目3D检测论文</h2><h3 id="Deep3Dbox"><a href="#Deep3Dbox" class="headerlink" title="Deep3Dbox"></a>Deep3Dbox</h3><p><img data-src="/2020/09/26/detection3D/20200617_225525_81.png" alt="20200617_225525_81"></p>
+<ol>
+<li>每个region proposal 回归 $\theta, X_o, Y_o, Z_o$</li>
+<li>分bin回归$sin\theta, cos\theta$ 与落在该bin的conf</li>
+<li>找 [u,v] 和 3D点的对应,最小二乘法求解超静定方程$X_c, Y_c, Z_c$</li>
+</ol>
+<p>问题:</p>
+<ol>
+<li>[u,v]与3D点的对应关系找不准</li>
+<li>最小二乘法求解误差大,$Z_c$带来的误差很大,不如梯度下降回归,再后矫正.</li>
+</ol>
+<h3 id="M3D-RPN"><a href="#M3D-RPN" class="headerlink" title="M3D-RPN:"></a>M3D-RPN:</h3><p>神经网络直接预测 $ \theta, t_w, t_h, t_l, [t_x, t_y, t_z] $</p>
+<ul>
+<li>post reficty $\theta$</li>
+</ul>
+<h3 id="Stereo-RCNN"><a href="#Stereo-RCNN" class="headerlink" title="Stereo RCNN:"></a>Stereo RCNN:</h3><p>神经网络预测: $[u_l, v_t, u_r, v_b, u^r_l, u^r_r, u_p], [X_o, Y_o, Z_o, \theta]$</p>
+<ul>
+<li>通过约束方程求解 $\theta, X_c, Y_c, Z_c$</li>
+<li>post dense alignment $Z_c$</li>
+<li>post reficty 基于dense alignment更新的$Z_c$, 通过约束方程再求解 $\theta, X_c, Y_c$</li>
+</ul>
+<h3 id="ROI-10D"><a href="#ROI-10D" class="headerlink" title="ROI-10D:"></a>ROI-10D:</h3><p>神经网络预测: $q(\theta), u_c, v_c, Z_c, X_o, Y_o, Z_o$ ($X_c, Y_c 通过\theta, Z_c计算得到?$)</p>
+<h3 id="2D-中心与-3D-中心投影的错位"><a href="#2D-中心与-3D-中心投影的错位" class="headerlink" title="2D 中心与 3D 中心投影的错位"></a>2D 中心与 3D 中心投影的错位</h3><p><img data-src="/2020/09/26/detection3D/Detection_3D-284a32b3.png" width="50%"></p>
+<h2 id="透视变换"><a href="#透视变换" class="headerlink" title="透视变换"></a>透视变换</h2><p><img data-src="/2020/09/26/detection3D/20200605_194851_34.png" alt="20200605_194851_34"><br>因此4个点可以标定两个平面的透视矩阵</p>
+]]></content>
+      <categories>
+        <category>计算机视觉</category>
+      </categories>
+      <tags>
+        <tag>3D目标检测</tag>
       </tags>
   </entry>
   <entry>
@@ -284,6 +332,7 @@ f(x,y+1)+f(x,y-1)-2f(x,y)</script><script type="math/tex; mode=display">g = \sqr
 </ul>
 <p>近似算法: 上述算法可以得到最优解，但计算量大. 对于每个特征，只考察分位点可以减少计算复杂度.<br>根据分位数采样得到分割点的候选集合S, 将特征k的值根据集合Sk划分到桶(bucket)中，接着对每个桶内样本的增益(梯度G,H)进行累加统计，最后在这些累计的统计量上寻找最佳分裂点。<br>除此之外还有带权重(基于梯度)的分位方案.</p>
 <p>参考: <a href="https://zhuanlan.zhihu.com/p/105612830">https://zhuanlan.zhihu.com/p/105612830</a><br><a href="https://yxzf.github.io/2017/04/xgboost-v2/">https://yxzf.github.io/2017/04/xgboost-v2/</a></p>
+<h3 id="XGBoost-公式推导"><a href="#XGBoost-公式推导" class="headerlink" title="XGBoost 公式推导"></a>XGBoost 公式推导</h3><p><img data-src="/2020/09/15/decision-tree/20200921_103652_79.png" alt="20200921_103652_79"></p>
 <h3 id="随机森林-RF"><a href="#随机森林-RF" class="headerlink" title="随机森林 RF"></a>随机森林 RF</h3><p>使用bagging的方法，每次对数据集有放回的随机采样，使用一部分数据训练不同的基学习器，最后再集成起来.<br>随机森林使用CART作为基学习器,不同的是,RF随机选择节点上的一部分特征𝑛𝑠𝑢𝑏，然后在这些随机选择的𝑛𝑠𝑢𝑏个样本特征中，选择一个最优的特征来做决策树的左右子树划分。(nsub越小,模型方差越小,偏差越大.一般通过交叉验证调参获取合适的𝑛𝑠𝑢𝑏) 也可以随机混合使用ID3 C4.5 CART.<br>如果是分类，则T个弱学习器投出最多票数的类别为最终类别。如果是回归，T个弱学习器得到的回归结果进行算术平均得到的值为最终的模型输出。<br>优点:</p>
 <ol>
 <li>训练与预测过程可以高度并行化</li>

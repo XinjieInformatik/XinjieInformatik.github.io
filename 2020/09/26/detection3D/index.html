@@ -20,17 +20,26 @@
     var CONFIG = {"hostname":"xinjieinformatik.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":{"enable":true,"onlypost":false},"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="欢迎访问我的技术博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="昕杰技术小站">
-<meta property="og:url" content="https://xinjieinformatik.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/index.html">
+  <meta name="description" content="3D Detection3D目标检测是一个很重要的领域，对于2D检测，只需要求解图像坐标系下的u, v坐标与类别。3D目标检测真正涉及到了估计相机坐标下物体的$X_c, Y_c, Z_c$坐标，物体坐标系下$X_o, Y_o, Z_o$的物体大小还有物体姿态$\theta, \gamma, \alpha$。因此，对于3D目标检测核心，如何求解3D相关的9个未知数: $\theta, \gamma,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3D目标检测">
+<meta property="og:url" content="https://xinjieinformatik.github.io/2020/09/26/detection3D/index.html">
 <meta property="og:site_name" content="昕杰技术小站">
-<meta property="og:description" content="欢迎访问我的技术博客">
+<meta property="og:description" content="3D Detection3D目标检测是一个很重要的领域，对于2D检测，只需要求解图像坐标系下的u, v坐标与类别。3D目标检测真正涉及到了估计相机坐标下物体的$X_c, Y_c, Z_c$坐标，物体坐标系下$X_o, Y_o, Z_o$的物体大小还有物体姿态$\theta, \gamma, \alpha$。因此，对于3D目标检测核心，如何求解3D相关的9个未知数: $\theta, \gamma,">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/26/detection3D/Detection_3D-c0027fb7.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/26/detection3D/20200617_230254_99.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/26/detection3D/20200617_225525_81.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/26/detection3D/Detection_3D-284a32b3.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/26/detection3D/20200605_194851_34.png">
+<meta property="article:published_time" content="2020-09-26T14:27:18.000Z">
+<meta property="article:modified_time" content="2020-09-26T15:10:01.227Z">
 <meta property="article:author" content="Xinjie">
+<meta property="article:tag" content="3D目标检测">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xinjieinformatik.github.io/2020/09/26/detection3D/Detection_3D-c0027fb7.png">
 
-<link rel="canonical" href="https://xinjieinformatik.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
+<link rel="canonical" href="https://xinjieinformatik.github.io/2020/09/26/detection3D/">
 
 
 <script id="page-configurations">
@@ -38,12 +47,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类: 计算机视觉 | 昕杰技术小站</title>
+  <title>3D目标检测 | 昕杰技术小站</title>
   
 
 
@@ -188,117 +197,190 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">计算机视觉
-          <small>分类</small>
-        </h2>
-      </div>
+ 
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/26/detection3D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/dog.png">
+      <meta itemprop="name" content="Xinjie">
+      <meta itemprop="description" content="欢迎访问我的技术博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="昕杰技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          3D目标检测
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-26 22:27:18 / 修改时间：23:10:01" itemprop="dateCreated datePublished" datetime="2020-09-26T22:27:18+08:00">2020-09-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-26T22:27:18+08:00"
-              content="2020-09-26">
-          09-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/09/26/detection3D/" itemprop="url">
-            <span itemprop="name">3D目标检测</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-26T18:26:04+08:00"
-              content="2020-09-26">
-          09-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/09/26/edgeDetection/" itemprop="url">
-            <span itemprop="name">边缘检测算子</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-26T17:55:33+08:00"
-              content="2020-09-26">
-          09-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/09/26/SIFT/" itemprop="url">
-            <span itemprop="name">SIFT提取图像特征点</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-14T15:51:08+08:00"
-              content="2020-09-14">
-          09-14
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/09/14/computer-vision-overview/" itemprop="url">
-            <span itemprop="name">计算机视觉总结</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+        <h1 id="3D-Detection"><a href="#3D-Detection" class="headerlink" title="3D Detection"></a>3D Detection</h1><p>3D目标检测是一个很重要的领域，对于2D检测，只需要求解图像坐标系下的u, v坐标与类别。3D目标检测真正涉及到了估计相机坐标下物体的$X_c, Y_c, Z_c$坐标，物体坐标系下$X_o, Y_o, Z_o$的物体大小还有物体姿态$\theta, \gamma, \alpha$。因此，对于3D目标检测<code>核心，如何求解3D相关的9个未知数:</code> $\theta, \gamma, \alpha, X_o, Y_o, Z_o, X_c, Y_c, Z_c$</p>
+<a id="more"></a>
+<h2 id="坐标系变换"><a href="#坐标系变换" class="headerlink" title="坐标系变换"></a>坐标系变换</h2><p><img data-src="/2020/09/26/detection3D/Detection_3D-c0027fb7.png" width="60%"></p>
+<p>齐次形式</p>
+<script type="math/tex; mode=display">\begin{bmatrix} u\\v\\1 \end{bmatrix} = \frac{1}{Z_c} * K *
+\begin{bmatrix} R^{3*3}&T^{3*1} \end{bmatrix} *
+\begin{bmatrix} X_o\\Y_o\\Z_o\\1 \end{bmatrix}</script><p>进一步描述外参 R, T</p>
+<script type="math/tex; mode=display">\begin{bmatrix} u\\v\\1 \end{bmatrix} = \frac{1}{Z_c} * K *
+\begin{bmatrix} cos\theta&0&sin\theta \\ 0&1&0 \\ -sin\theta&0&cos\theta \end{bmatrix} *
+\begin{bmatrix} X_o\\Y_o\\Z_o \end{bmatrix} +
+\begin{bmatrix} X_c\\Y_c\\Z_c \end{bmatrix}</script><p>像素坐标系: $u, v$<br>物体坐标系: $X_o, Y_o, Z_o (l, w, h)$<br>相机坐标系: $X_c, Y_c, Z_c$</p>
+<p><code>核心，如何求解3D相关的7个未知数:</code> $\theta, X_o, Y_o, Z_o, X_c, Y_c, Z_c$<br>其中 $\theta(r_y), X_c, Y_c, Z_c$最重要</p>
+<p><img data-src="/2020/09/26/detection3D/20200617_230254_99.png" alt="20200617_230254_99"></p>
+<h2 id="单目3D检测论文"><a href="#单目3D检测论文" class="headerlink" title="单目3D检测论文"></a>单目3D检测论文</h2><h3 id="Deep3Dbox"><a href="#Deep3Dbox" class="headerlink" title="Deep3Dbox"></a>Deep3Dbox</h3><p><img data-src="/2020/09/26/detection3D/20200617_225525_81.png" alt="20200617_225525_81"></p>
+<ol>
+<li>每个region proposal 回归 $\theta, X_o, Y_o, Z_o$</li>
+<li>分bin回归$sin\theta, cos\theta$ 与落在该bin的conf</li>
+<li>找 [u,v] 和 3D点的对应,最小二乘法求解超静定方程$X_c, Y_c, Z_c$</li>
+</ol>
+<p>问题:</p>
+<ol>
+<li>[u,v]与3D点的对应关系找不准</li>
+<li>最小二乘法求解误差大,$Z_c$带来的误差很大,不如梯度下降回归,再后矫正.</li>
+</ol>
+<h3 id="M3D-RPN"><a href="#M3D-RPN" class="headerlink" title="M3D-RPN:"></a>M3D-RPN:</h3><p>神经网络直接预测 $ \theta, t_w, t_h, t_l, [t_x, t_y, t_z] $</p>
+<ul>
+<li>post reficty $\theta$</li>
+</ul>
+<h3 id="Stereo-RCNN"><a href="#Stereo-RCNN" class="headerlink" title="Stereo RCNN:"></a>Stereo RCNN:</h3><p>神经网络预测: $[u_l, v_t, u_r, v_b, u^r_l, u^r_r, u_p], [X_o, Y_o, Z_o, \theta]$</p>
+<ul>
+<li>通过约束方程求解 $\theta, X_c, Y_c, Z_c$</li>
+<li>post dense alignment $Z_c$</li>
+<li>post reficty 基于dense alignment更新的$Z_c$, 通过约束方程再求解 $\theta, X_c, Y_c$</li>
+</ul>
+<h3 id="ROI-10D"><a href="#ROI-10D" class="headerlink" title="ROI-10D:"></a>ROI-10D:</h3><p>神经网络预测: $q(\theta), u_c, v_c, Z_c, X_o, Y_o, Z_o$ ($X_c, Y_c 通过\theta, Z_c计算得到?$)</p>
+<h3 id="2D-中心与-3D-中心投影的错位"><a href="#2D-中心与-3D-中心投影的错位" class="headerlink" title="2D 中心与 3D 中心投影的错位"></a>2D 中心与 3D 中心投影的错位</h3><p><img data-src="/2020/09/26/detection3D/Detection_3D-284a32b3.png" width="50%"></p>
+<h2 id="透视变换"><a href="#透视变换" class="headerlink" title="透视变换"></a>透视变换</h2><p><img data-src="/2020/09/26/detection3D/20200605_194851_34.png" alt="20200605_194851_34"><br>因此4个点可以标定两个平面的透视矩阵</p>
 
     </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>技术分享</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="Xinjie 微信支付">
+        <p>微信支付</p>
+      </div>
+
   </div>
-  
-  
-  
+</div>
 
-  
+        
 
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Xinjie
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xinjieinformatik.github.io/2020/09/26/detection3D/" title="3D目标检测">https://xinjieinformatik.github.io/2020/09/26/detection3D/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/3D%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag"># 3D目标检测</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/26/edgeDetection/" rel="prev" title="边缘检测算子">
+      <i class="fa fa-chevron-left"></i> 边缘检测算子
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+ 
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -345,6 +427,7 @@
        
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#3D-Detection"><span class="nav-text">3D Detection</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#坐标系变换"><span class="nav-text">坐标系变换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单目3D检测论文"><span class="nav-text">单目3D检测论文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Deep3Dbox"><span class="nav-text">Deep3Dbox</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#M3D-RPN"><span class="nav-text">M3D-RPN:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stereo-RCNN"><span class="nav-text">Stereo RCNN:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROI-10D"><span class="nav-text">ROI-10D:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2D-中心与-3D-中心投影的错位"><span class="nav-text">2D 中心与 3D 中心投影的错位</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透视变换"><span class="nav-text">透视变换</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -593,7 +676,7 @@ show_date_time();
       quicklink({
         timeout : 3000,
         priority: true,
-        ignores : [uri => uri.includes('#'),uri => uri === 'https://xinjieinformatik.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/',]
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://xinjieinformatik.github.io/2020/09/26/detection3D/',]
       });
       });
   </script>
@@ -602,6 +685,25 @@ show_date_time();
 
   <script async src="/js/cursor.js"></script> 
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'a054acd527b7f50a7920',
+      clientSecret: '2f3218b7d2f9dd1ed5ccd36593a3572a9c4d28d3',
+      repo        : 'gitalks_comments',
+      owner       : 'XinjieInformatik',
+      admin       : ['XinjieInformatik'],
+      id          : '08433f5ff51e039e894c4c303c25a99f',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>

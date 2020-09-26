@@ -20,19 +20,20 @@
     var CONFIG = {"hostname":"xinjieinformatik.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":{"enable":true,"onlypost":false},"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="欢迎访问我的技术博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="https://xinjieinformatik.github.io/categories/index.html">
+  <meta name="description" content="位运算实现加减乘除只用位运算实现加减乘除吧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="位运算实现加减乘除">
+<meta property="og:url" content="https://xinjieinformatik.github.io/2020/09/18/bit-operation/index.html">
 <meta property="og:site_name" content="昕杰技术小站">
-<meta property="og:description" content="欢迎访问我的技术博客">
+<meta property="og:description" content="位运算实现加减乘除只用位运算实现加减乘除吧">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-09-09T05:26:22.000Z">
-<meta property="article:modified_time" content="2020-09-09T05:31:09.646Z">
+<meta property="article:published_time" content="2020-09-18T14:08:28.000Z">
+<meta property="article:modified_time" content="2020-09-18T14:13:05.379Z">
 <meta property="article:author" content="Xinjie">
+<meta property="article:tag" content="位运算">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://xinjieinformatik.github.io/categories/">
+<link rel="canonical" href="https://xinjieinformatik.github.io/2020/09/18/bit-operation/">
 
 
 <script id="page-configurations">
@@ -40,13 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>categories | 昕杰技术小站
-</title>
+  <title>位运算实现加减乘除 | 昕杰技术小站</title>
   
 
 
@@ -190,51 +190,155 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
-          <div class="content page posts-expand">
+          <div class="content post posts-expand">
             
 
     
-    
-    
-    <div class="post-block" lang="zh-CN">
-      <header class="post-header">
-
-<h1 class="post-title" itemprop="name headline">categories
-</h1>
-
-<div class="post-meta">
   
+  
+  
+ 
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/18/bit-operation/">
 
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/dog.png">
+      <meta itemprop="name" content="Xinjie">
+      <meta itemprop="description" content="欢迎访问我的技术博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="昕杰技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          位运算实现加减乘除
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-18 22:08:28 / 修改时间：22:13:05" itemprop="dateCreated datePublished" datetime="2020-09-18T22:08:28+08:00">2020-09-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">算法练习</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="位运算实现加减乘除"><a href="#位运算实现加减乘除" class="headerlink" title="位运算实现加减乘除"></a>位运算实现加减乘除</h1><p>只用位运算实现加减乘除吧</p>
+<a id="more"></a>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitAdd</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// a+b = 非进位+进位 = (a^b)+(a&amp;b)&lt;&lt;1, 当进位b==0结束位运算</span></span><br><span class="line">    <span class="keyword">while</span> (b != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> carry = (a &amp; b) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        a ^= b;</span><br><span class="line">        b = carry;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitPosMul</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// a依次左移 b依次右移 b&amp;1时把a加到res</span></span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (b != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>) &#123;</span><br><span class="line">            res = bitAdd(a, res);</span><br><span class="line">        &#125;</span><br><span class="line">        a &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isNeg</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (n &gt;&gt; <span class="number">31</span>) != <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">neg</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> bitAdd(~n, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">ABS</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> isNeg(a) ? neg(a) : a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitMul</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sign = isNeg(a) ^ isNeg(b);</span><br><span class="line">    <span class="keyword">int</span> res = bitPosMul(ABS(a), ABS(b));</span><br><span class="line">    res = sign ? neg(res) : res;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitPosDiv</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">31</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">        <span class="keyword">if</span> ((a &gt;&gt; i) &gt;= b) &#123;</span><br><span class="line">            ans = bitAdd(ans, (<span class="number">1</span> &lt;&lt; i));</span><br><span class="line">            a = bitAdd(a, neg(b &lt;&lt; i));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitDiv</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sign = isNeg(a) ^ isNeg(b);</span><br><span class="line">    <span class="keyword">int</span> res = bitPosDiv(ABS(a), ABS(b));</span><br><span class="line">    res = sign ? neg(res) : res;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a, b;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d %d&quot;</span>, &amp;a, &amp;b);</span><br><span class="line">    <span class="keyword">int</span> c = bitAdd(a, b);</span><br><span class="line">    <span class="keyword">int</span> d = bitAdd(a, neg(b));</span><br><span class="line">    <span class="keyword">int</span> e = bitMul(a, b);</span><br><span class="line">    <span class="keyword">int</span> f = bitDiv(a, b);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;add: %d sub: %d mul: %d div: %d&quot;</span>, c, d, e, f);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>技术分享</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="Xinjie 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
 </div>
 
-</header>
-
-      
-      
-      
-      <div class="post-body">
-          <div class="category-all-page">
-            <div class="category-all-title">
-              目前共计 7 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">hexo博客搭建</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/">算法练习</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/leetcode/">leetcode</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95%E7%BB%83%E4%B9%A0/%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90/">复杂度分析</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a><span class="category-list-count">2</span></li></ul>
-            </div>
-          </div>
         
-      </div>
-      
-      
-      
-    </div>
-    
 
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Xinjie
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xinjieinformatik.github.io/2020/09/18/bit-operation/" title="位运算实现加减乘除">https://xinjieinformatik.github.io/2020/09/18/bit-operation/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="tag"># 位运算</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/15/binary-search-basis/" rel="prev" title="旋转数组山脉二分查找系列">
+      <i class="fa fa-chevron-left"></i> 旋转数组山脉二分查找系列
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/26/SIFT/" rel="next" title="SIFT提取图像特征点">
+      SIFT提取图像特征点 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
     
-    
-    
+  </article>
+  
+  
+  
+ 
 
 
           </div>
@@ -286,6 +390,7 @@
        
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#位运算实现加减乘除"><span class="nav-text">位运算实现加减乘除</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -534,7 +639,7 @@ show_date_time();
       quicklink({
         timeout : 3000,
         priority: true,
-        ignores : [uri => uri.includes('#'),uri => uri === 'https://xinjieinformatik.github.io/categories/',]
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://xinjieinformatik.github.io/2020/09/18/bit-operation/',]
       });
       });
   </script>
@@ -554,7 +659,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'gitalks_comments',
       owner       : 'XinjieInformatik',
       admin       : ['XinjieInformatik'],
-      id          : 'a676607444a8bc8b150c9a3aff884e61',
+      id          : 'c53116c40734b16348765badf6cd2df9',
         language: '',
       distractionFreeMode: true
     });

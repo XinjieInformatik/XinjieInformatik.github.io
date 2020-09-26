@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>SIFT提取图像特征点</title>
+    <url>/2020/09/26/SIFT/</url>
+    <content><![CDATA[<h1 id="SIFT提取图像特征点"><a href="#SIFT提取图像特征点" class="headerlink" title="SIFT提取图像特征点"></a>SIFT提取图像特征点</h1><p>SIFT是很经典有效，提取图像特征点的方法，在图像检索，匹配对齐等领域都有很广泛的应用。在这篇blog中，我会总结一下总体思路，具体的可以参考论文，或者实际使用体验一下。</p>
+<a id="more"></a>
+<p>Scale Invariant Feature Transform (SIFT)<br>论文: <a href="https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf">https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf</a></p>
+<h2 id="SIFT-算法流程"><a href="#SIFT-算法流程" class="headerlink" title="SIFT 算法流程"></a>SIFT 算法流程</h2><ol>
+<li><code>尺度空间极值检测</code><br>不同高斯核sigma滤波，构建不同模糊程度的图像金字塔.对相邻层求差分.如果该点灰度值大于或小于周围全部26个点,则定义该点为关键点.</li>
+</ol>
+<p><img data-src="/2020/09/26/SIFT/20200703_231317_33.png" alt="20200703_231317_33"></p>
+<ol>
+<li><p><code>关键点精确定位</code><br>将找到的极值点进行曲面拟合,重新确定更精确的极值点. 剔除低对比度的特征点 与 不稳定的边缘响应点</p>
+</li>
+<li><p><code>方向赋值</code><br>为了实现关键点的旋转不变性,计算关键点附近各个像素的梯度方向与梯度幅值.统计窗口内,8个(原文36)方向幅值的直方图,累计幅值最高的方向作为该特征点的主方向.有时候还会有辅方向.同样通过曲线拟合,确定精确方向.</p>
+</li>
+<li><p><code>关键点描述</code><br>将16x16分为4x4个区域,每个区域8个方向,总共128个特征来描述这个特征点.<br>参考: <a href="https://www.bilibili.com/video/av42629边缘检测算子边缘检测算子442?from=search&amp;seid=7778066026571529065">https://www.bilibili.com/video/av42629边缘检测算子边缘检测算子442?from=search&amp;seid=7778066026571529065</a></p>
+</li>
+</ol>
+<h2 id="SIFT-图像拼接"><a href="#SIFT-图像拼接" class="headerlink" title="SIFT 图像拼接"></a>SIFT 图像拼接</h2><ol>
+<li>加载两个图片，提取SIFT特征点</li>
+<li>两张图片的SIFT特征点匹配(例如knn)</li>
+<li>基于匹配的特征点估计图片的透射变换</li>
+<li>图片融合(alpha blending, 梯度遮罩, 最大密度投影)</li>
+</ol>
+<h2 id="特征点匹配"><a href="#特征点匹配" class="headerlink" title="特征点匹配"></a>特征点匹配</h2><p>比较最近邻距离与次近邻距离的SIFT匹配方式：取一幅图像中的一个SIFT关键点，并找出其与另一幅图像中欧式距离最近的前两个关键点，在这两个关键点中，如果最近的距离除以次近的距离得到的比率ratio少于某个阈值T，则接受这一对匹配点。</p>
+<h2 id="LSB-最低有效位"><a href="#LSB-最低有效位" class="headerlink" title="LSB 最低有效位"></a>LSB 最低有效位</h2><p>8位灰度图像数值范围0-255<br>对于十进制255 -&gt; 二进制 11111111<br>对于后几个bit的修改对原图不会怎么改变,可以把水印信息放在这.</p>
+]]></content>
+      <categories>
+        <category>计算机视觉</category>
+      </categories>
+      <tags>
+        <tag>SIFT</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>旋转数组山脉二分查找系列</title>
     <url>/2020/09/15/binary-search-basis/</url>
     <content><![CDATA[<h1 id="旋转数组二分查找系列"><a href="#旋转数组二分查找系列" class="headerlink" title="旋转数组二分查找系列"></a>旋转数组二分查找系列</h1><p>二分是典型的一看就懂，一写就废。。来几个二分查找的基础题目吧，边界一定要小心。<br>这几题很有代表性，分别是：<a href="https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/">153. 寻找旋转排序数组中的最小值</a> <a href="https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/">154. 寻找旋转排序数组中的最小值 II</a> <a href="https://leetcode-cn.com/problems/search-in-rotated-sorted-array/">33. 搜索旋转排序数组</a> <a href="https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii">81. 搜索旋转排序数组 II</a> <a href="https://leetcode-cn.com/problems/find-peak-element/">162. 寻找峰值</a> <a href="https://leetcode-cn.com/problems/find-in-mountain-array/">1095. 山脉数组中查找目标值</a></p>
@@ -63,6 +97,20 @@
         <tag>二分查找</tag>
         <tag>旋转数组二分查找</tag>
         <tag>山脉数组二分查找</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>位运算实现加减乘除</title>
+    <url>/2020/09/18/bit-operation/</url>
+    <content><![CDATA[<h1 id="位运算实现加减乘除"><a href="#位运算实现加减乘除" class="headerlink" title="位运算实现加减乘除"></a>位运算实现加减乘除</h1><p>只用位运算实现加减乘除吧</p>
+<a id="more"></a>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitAdd</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// a+b = 非进位+进位 = (a^b)+(a&amp;b)&lt;&lt;1, 当进位b==0结束位运算</span></span><br><span class="line">    <span class="keyword">while</span> (b != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> carry = (a &amp; b) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        a ^= b;</span><br><span class="line">        b = carry;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitPosMul</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// a依次左移 b依次右移 b&amp;1时把a加到res</span></span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (b != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>) &#123;</span><br><span class="line">            res = bitAdd(a, res);</span><br><span class="line">        &#125;</span><br><span class="line">        a &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isNeg</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (n &gt;&gt; <span class="number">31</span>) != <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">neg</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> bitAdd(~n, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">ABS</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> isNeg(a) ? neg(a) : a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitMul</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sign = isNeg(a) ^ isNeg(b);</span><br><span class="line">    <span class="keyword">int</span> res = bitPosMul(ABS(a), ABS(b));</span><br><span class="line">    res = sign ? neg(res) : res;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitPosDiv</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">31</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">        <span class="keyword">if</span> ((a &gt;&gt; i) &gt;= b) &#123;</span><br><span class="line">            ans = bitAdd(ans, (<span class="number">1</span> &lt;&lt; i));</span><br><span class="line">            a = bitAdd(a, neg(b &lt;&lt; i));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitDiv</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sign = isNeg(a) ^ isNeg(b);</span><br><span class="line">    <span class="keyword">int</span> res = bitPosDiv(ABS(a), ABS(b));</span><br><span class="line">    res = sign ? neg(res) : res;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a, b;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d %d&quot;</span>, &amp;a, &amp;b);</span><br><span class="line">    <span class="keyword">int</span> c = bitAdd(a, b);</span><br><span class="line">    <span class="keyword">int</span> d = bitAdd(a, neg(b));</span><br><span class="line">    <span class="keyword">int</span> e = bitMul(a, b);</span><br><span class="line">    <span class="keyword">int</span> f = bitDiv(a, b);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;add: %d sub: %d mul: %d div: %d&quot;</span>, c, d, e, f);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法练习</category>
+      </categories>
+      <tags>
+        <tag>位运算</tag>
       </tags>
   </entry>
   <entry>
@@ -244,10 +292,10 @@
 <h4 id="NMS"><a href="#NMS" class="headerlink" title="NMS"></a>NMS</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">nms</span>(<span class="params">bboxes, iou_thresh</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">      bboxes: after score. np.array. (N, 6) [xmin, ymin, xmax, ymax, score, class]</span></span><br><span class="line"><span class="string">      iou_thresh: float</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">      bboxes_nms: np.array. (N&#x27;, 6) [xmin, ymin, xmax, ymax, score, class]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    classes = bboxes[:, <span class="number">5</span>] <span class="comment"># (N,)</span></span><br><span class="line">    unique_classes = set(classes)</span><br><span class="line">    bboxes_nms = []</span><br><span class="line">    <span class="keyword">for</span> cls <span class="keyword">in</span> unique_classes:</span><br><span class="line">        mask = classes == cls <span class="comment"># (N,)</span></span><br><span class="line">        cls_bboxes = bboxes[mask] <span class="comment"># (M, 6)</span></span><br><span class="line">        <span class="comment"># nms in each class</span></span><br><span class="line">        x1, y1 = cls_bboxes[:, <span class="number">0</span>], cls_bboxes[:, <span class="number">1</span>] <span class="comment"># (M,)</span></span><br><span class="line">        x2, y2 = cls_bboxes[:, <span class="number">2</span>], cls_bboxes[:, <span class="number">3</span>]</span><br><span class="line">        scores = cls_bboxes[:, <span class="number">4</span>] <span class="comment"># (M,)</span></span><br><span class="line">        areas = (x2 - x1) * (y2 - y1) <span class="comment"># (M,)</span></span><br><span class="line">        order = scores.argsort()[::<span class="number">-1</span>] <span class="comment"># (M,)</span></span><br><span class="line">        keep = []</span><br><span class="line">        <span class="keyword">while</span> order.size &gt; <span class="number">0</span>:</span><br><span class="line">            i = order[<span class="number">0</span>]</span><br><span class="line">            keep.append(i)</span><br><span class="line">            x1_max = np.maximum(x1[i], x1[order[<span class="number">1</span>:]]) <span class="comment"># (1,), (M-1,) -&gt; (M-1,)</span></span><br><span class="line">            y1_max = np.maximum(y1[i], y1[order[<span class="number">1</span>:]])</span><br><span class="line">            x2_min = np.minimum(x2[i], x2[order[<span class="number">1</span>:]])</span><br><span class="line">            y2_min = np.minimum(y2[i], y2[order[<span class="number">1</span>:]])</span><br><span class="line">            w = np.maximum(<span class="number">0</span>, x2_min - x1_max) <span class="comment"># (M-1,)</span></span><br><span class="line">            h = np.maximum(<span class="number">0</span>, y2_min - y1_max)</span><br><span class="line">            inter_area = w * h <span class="comment"># (M-1,)</span></span><br><span class="line">            union_area = areas[i] + areas[order[<span class="number">1</span>:]] - inter_area <span class="comment"># (1,), (M-1,) -&gt; (M-1,)</span></span><br><span class="line">            iou = inter_area / union_area <span class="comment"># (M-1,)</span></span><br><span class="line">            keep_index = np.where(iou &lt;= iou_thresh)[<span class="number">0</span>]</span><br><span class="line">            order = order[keep_index + <span class="number">1</span>]</span><br><span class="line">        keep_bboxes = cls_bboxes[keep]</span><br><span class="line">        bboxes_nms.append(keep_bboxes)</span><br><span class="line">    bboxes_nms = np.vstack(bboxes_nms)</span><br><span class="line">    <span class="keyword">return</span> bboxes_nms</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>computer vision</category>
+        <category>计算机视觉</category>
       </categories>
       <tags>
-        <tag>overview</tag>
+        <tag>综述</tag>
       </tags>
   </entry>
   <entry>

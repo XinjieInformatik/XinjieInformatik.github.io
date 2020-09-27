@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/star.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xinjieinformatik.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":"ture","show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":{"enable":true,"onlypost":false},"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Stereo Vision最近在研究一些双目3D，深度估计的方向，但是中文这方面系统性的知识很少，于是在学习的同时做个总结。这份总结会从传统stereo vision的知识点与数学基础开始，过渡到深度学习的方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Stereo vision">
+<meta property="og:url" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/index.html">
+<meta property="og:site_name" content="昕杰技术小站">
+<meta property="og:description" content="Stereo Vision最近在研究一些双目3D，深度估计的方向，但是中文这方面系统性的知识很少，于是在学习的同时做个总结。这份总结会从传统stereo vision的知识点与数学基础开始，过渡到深度学习的方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-39604de6.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-4ebd1630.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-73e255ab.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-0118d06f.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-2ad5aaf6.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-a3504486.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-d8d48a75.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-52a04195.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-95341eef.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-9cb10c7d.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-75258732.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-7ceb5fac.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-72e7b8b7.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-0e1ae303.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-ae79628a.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-e6b12d85.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-f41a88f1.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-51438b01.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-cfd20c12.png">
+<meta property="og:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-ab52ee9a.png">
+<meta property="article:published_time" content="2020-09-27T09:10:47.000Z">
+<meta property="article:modified_time" content="2020-09-27T09:50:49.640Z">
+<meta property="article:author" content="Xinjie">
+<meta property="article:tag" content="深度估计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-39604de6.png">
+
+<link rel="canonical" href="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Stereo vision | 昕杰技术小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="昕杰技术小站" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+    <a target="_blank" rel="noopener" href="https://github.com/XinjieInformatik" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">昕杰技术小站</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">后端 机器学习</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  
+ 
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/dog.png">
+      <meta itemprop="name" content="Xinjie">
+      <meta itemprop="description" content="欢迎访问我的技术博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="昕杰技术小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Stereo vision
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-27 17:10:47 / 修改时间：17:50:49" itemprop="dateCreated datePublished" datetime="2020-09-27T17:10:47+08:00">2020-09-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Stereo-Vision"><a href="#Stereo-Vision" class="headerlink" title="Stereo Vision"></a>Stereo Vision</h1><p>最近在研究一些双目3D，深度估计的方向，但是中文这方面系统性的知识很少，于是在学习的同时做个总结。这份总结会从传统stereo vision的知识点与数学基础开始，过渡到深度学习的方法。</p>
+<a id="more"></a>
+<h1 id="Stereo-Vision-1"><a href="#Stereo-Vision-1" class="headerlink" title="Stereo Vision"></a>Stereo Vision</h1><p>很推荐的参考资料:<br><a target="_blank" rel="noopener" href="http://www.vision.deis.unibo.it/smatt/Seminars/StereoVision.pdf">http://www.vision.deis.unibo.it/smatt/Seminars/StereoVision.pdf</a></p>
+<h2 id="传统-Stereo-Vision"><a href="#传统-Stereo-Vision" class="headerlink" title="传统 Stereo Vision"></a>传统 Stereo Vision</h2><p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-39604de6.png" width="30%"><br><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-4ebd1630.png" width="40%"></p>
+<p>通过使用使用两个（或多个）相机，如果能在两个图像中找到对应点，则可以通过三角测量(triangulation)来推断深度</p>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-73e255ab.png" width="55%"><br><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-0118d06f.png" width="55%"></p>
+<p>对极约束(epipolar constraint)指出: 位于（红色）视线的点的对应点位于目标图像像平面πT上的绿线上。</p>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-2ad5aaf6.png" width="50%"></p>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-a3504486.png" width="50%"></p>
+<p>可以找到平行的相平面，使得πR与πT上的成像点位于同一扫描线上</p>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-d8d48a75.png" width="40%"></p>
+<p>视差dis与深度Z的转换：相似三角形</p>
+<script type="math/tex; mode=display">\frac{b}{Z} = \frac{(b - x_R) + x_T}{Z - f}</script><script type="math/tex; mode=display">Z = \frac{b * f}{x_R - x_T} = \frac{b * f}{dis}</script><p>根据Triangulation，世界坐标系的X, Y 也能由如下公式算出</p>
+<script type="math/tex; mode=display">X = Z * \frac{x_R}{f}</script><script type="math/tex; mode=display">Y = Z * \frac{y_R}{f}</script><p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-52a04195.png" width="70%"></p>
+<p>离摄像头越近，视差越大</p>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-95341eef.png" width="50%"></p>
+<p>每个视差值对应一个深度平面, 深度Z的范围Horopter受限于视差d</p>
+<p>立体视觉算法总体分为如下4个步骤<br>1) Matching cost computation 匹配损失计算<br>2) Cost aggregation 损失聚合<br>3) Disparity computation/optimization 视差计算/优化<br>4) Disparity refinement 视差修正</p>
+<p>在1之前还有一些前处理的方法，例如：Laplacian of Gaussian (LoG) filtering, Subtraction of mean values computed in nearby pixels, Bilateral filtering, Census transform</p>
+<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><p>主要分为 local approach 和 global approach</p>
+<h3 id="Local-approaches"><a href="#Local-approaches" class="headerlink" title="Local approaches"></a>Local approaches</h3><p>通常由上述步骤的1，2组成。1. Matching cost computation + 2. Cost aggregation (+ WTA)</p>
+<h3 id="Global-semi-global-approaches"><a href="#Global-semi-global-approaches" class="headerlink" title="Global (semi-global) approaches"></a>Global (semi-global) approaches</h3><p>通常由上述步骤的1，3组成。1. Matching cost computation + 3. Disparity computation/optimization</p>
+<h3 id="1-2-Matching-cost-computation-amp-Cost-aggregation-WTA"><a href="#1-2-Matching-cost-computation-amp-Cost-aggregation-WTA" class="headerlink" title="1 + 2. Matching cost computation &amp; Cost aggregation (+ WTA)"></a>1 + 2. Matching cost computation &amp; Cost aggregation (+ WTA)</h3><p>匹配损失计算与损失聚合有以下几种方式。</p>
+<h4 id="像素层面-Pixel-level"><a href="#像素层面-Pixel-level" class="headerlink" title="像素层面 Pixel level"></a>像素层面 Pixel level</h4><p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-9cb10c7d.png" width="70%"></p>
+<h4 id="窗口层面-Fixed-Window-FW"><a href="#窗口层面-Fixed-Window-FW" class="headerlink" title="窗口层面 Fixed Window (FW)"></a>窗口层面 Fixed Window (FW)</h4><p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-75258732.png" width="60%"></p>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-7ceb5fac.png" width="60%"></p>
+<p>R平面上红点的对应点，在T平面对极线 [x, x+dmax] 范围内寻找</p>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-72e7b8b7.png" width="50%"></p>
+<p>在像素层面计算匹配点(区域)的相似度(matching cost), winner takes all(WTA), cost最小的作为匹配点</p>
+<h4 id="聚合损失函数-Matching-cost-fomular"><a href="#聚合损失函数-Matching-cost-fomular" class="headerlink" title="聚合损失函数 Matching cost fomular"></a>聚合损失函数 Matching cost fomular</h4><h5 id="像素层面-Single-pixel"><a href="#像素层面-Single-pixel" class="headerlink" title="像素层面 Single pixel"></a>像素层面 Single pixel</h5><ul>
+<li>Absolute differences<script type="math/tex; mode=display">e(x,y,d) = |I_R(x,y) - I_T(x+d,y)|</script></li>
+<li>Squared differences<script type="math/tex; mode=display">e(x,y,d) = (I_R(x,y) - I_T(x+d,y))^2</script></li>
+</ul>
+<h5 id="窗口层面-Fixed-Window-FW-1"><a href="#窗口层面-Fixed-Window-FW-1" class="headerlink" title="窗口层面 Fixed Window (FW)"></a>窗口层面 Fixed Window (FW)</h5><ul>
+<li>Sum of Absolute differences (SAD)<script type="math/tex; mode=display">C(x,y,d) = \sum_{x∈S}|I_R(x,y) - I_T(x+d,y)|</script></li>
+<li>Sum of Squared differences (SSD)<script type="math/tex; mode=display">e(x,y,d) = \sum_{x∈S}(I_R(x,y) - I_T(x+d,y))^2</script></li>
+</ul>
+<p>基于window的matching cost计算会受以下因素影响：</p>
+<ul>
+<li>implicitly assumes frontal-parallel surfaces 假设平面平行</li>
+</ul>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-0e1ae303.png" width="70%"><br><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-ae79628a.png" width="70%"></p>
+<ul>
+<li>ignores depth discontinuities 忽略深度不连续性</li>
+</ul>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-e6b12d85.png" width="70%"></p>
+<ul>
+<li>does not deal explicitly with uniform areas and repetitive patterns 没有明确处理统一区域与重复模式</li>
+</ul>
+<p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-f41a88f1.png" width="70%"></p>
+<p>基于上述问题的一系列改进方案</p>
+<ul>
+<li><p>Shiftable Windows： D. Scharstein and R. Szeliski, A taxonomy and evaluation of dense two-frame stereo correspondence algorithms Int. Jour. Computer Vision, 47(1/2/3):7–42, 2002<br><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-51438b01.png" width="60%"></p>
+</li>
+<li><p>Multiple Windows：H. Hirschmuller, P. Innocent, and J. Garibaldi, Real-time correlation-based stereo vision with reduced border errors Int. Journ. of Computer Vision, 47:1–3, 2002<br><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-cfd20c12.png" width="60%"></p>
+</li>
+<li><p>Variable Windows：O. Veksler, Fast variable window for stereo correspondence using integral images In Proc. Conf. on Computer Vision and Pattern Recognition (CVPR 2003), pages 556–561, 2003</p>
+</li>
+<li><p>Segmentation based</p>
+</li>
+<li>Bilateral Filtering</li>
+<li>Adaptive Weights</li>
+<li>Segment Support</li>
+<li>Fast Aggregation</li>
+</ul>
+<h3 id="3-Disparity-computation-optimization"><a href="#3-Disparity-computation-optimization" class="headerlink" title="3. Disparity computation/optimization"></a>3. Disparity computation/optimization</h3><p>目标：基于整个stereo pair找到最佳视差匹配<br>定义了能量函数E(d)</p>
+<script type="math/tex; mode=display">E(d) = E_{data}(d) + E_{smooth}(d)</script><p>$E_{data}$ 衡量stereo pair的匹配程度 (基于总体 matching cost)</p>
+<p>$E_{smooth}$ 衡量边界处的连续性</p>
+<p>一系列可参考的方法</p>
+<ul>
+<li>Graph Cuts: V. Kolmogorov and R. Zabih, Computing visual correspondence with occlusions using graph cuts, ICCV 2001</li>
+<li>BP + segmentation: A. Klaus, M. Sormann and K. Karner, Segment-based stereo matching using belief propagation and a self-adapting dissimilarity measure. ICPR 2006</li>
+<li>Cooperative + segmentation: Z. Wang and Z. Zheng, A region based stereo matching algorithm using cooperative optimization, CVPR 2008</li>
+<li>Dynamic Programming: D. Scharstein and R. Szeliski, A taxonomy and evaluation of dense two-frame stereo correspondence algorithms Int. Jour. Computer Vision, 47(1/2/3):7–42, 2002</li>
+<li>Scanline Optimization: H. Hirschmüller. Stereo vision in structured environments by consistent semi-global matching. CVPR 2006, PAMI 30(2):328-341, 2008</li>
+</ul>
+<h3 id="4-Disparity-refinement"><a href="#4-Disparity-refinement" class="headerlink" title="4. Disparity refinement"></a>4. Disparity refinement</h3><p>修正计算的视差异常值<br>以下可参考的方法</p>
+<ul>
+<li>Sub-pixel interpolation</li>
+<li>Image filtering: Median filtering, Morphological operators, Bilateral filtering</li>
+<li>Single Matching Phase</li>
+<li>Segmentation based outliers identification and replacement</li>
+<li>Iterative approaches</li>
+</ul>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p><img data-src="/2020/09/27/stereo-vision/立体视觉_Stereo_Vision-ab52ee9a.png" width="60%"></p>
+<p>[0, d] 为 在R平面上点$x_R$对应T平面$x_R$向左搜索的范围, 如果对图片上每个点进行搜索匹配计算cost，就会形成上图3维的DSI视差匹配代价空间(cost volume)<br>如果WTA，就是在d维度上求min，变成2维，每个格子里可储存的是该像素点最小cost对应的dis值，完成视差计算，进一步就可以通过 $Z = \frac{b f}{dis}$ 转为深度了</p>
+<p>初步思路:<br>stereo imgs 输入同一个神经网络，做目标检测，在ROI对应的feature上构建cost volume，再来几层卷积，回归该ROI的深度.<br>先重点关注 stereoNet, hd3, centernet</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>技术分享</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="Xinjie 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Xinjie
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xinjieinformatik.github.io/2020/09/27/stereo-vision/" title="Stereo vision">https://xinjieinformatik.github.io/2020/09/27/stereo-vision/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/" rel="tag"># 深度估计</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/26/convolution-FLOPs/" rel="prev" title="卷积FLOPs与参数量计算">
+      <i class="fa fa-chevron-left"></i> 卷积FLOPs与参数量计算
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+ 
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+       
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Stereo-Vision"><span class="nav-text">Stereo Vision</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stereo-Vision-1"><span class="nav-text">Stereo Vision</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#传统-Stereo-Vision"><span class="nav-text">传统 Stereo Vision</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用方法"><span class="nav-text">常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Local-approaches"><span class="nav-text">Local approaches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Global-semi-global-approaches"><span class="nav-text">Global (semi-global) approaches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Matching-cost-computation-amp-Cost-aggregation-WTA"><span class="nav-text">1 + 2. Matching cost computation &amp; Cost aggregation (+ WTA)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#像素层面-Pixel-level"><span class="nav-text">像素层面 Pixel level</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口层面-Fixed-Window-FW"><span class="nav-text">窗口层面 Fixed Window (FW)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#聚合损失函数-Matching-cost-fomular"><span class="nav-text">聚合损失函数 Matching cost fomular</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#像素层面-Single-pixel"><span class="nav-text">像素层面 Single pixel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#窗口层面-Fixed-Window-FW-1"><span class="nav-text">窗口层面 Fixed Window (FW)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Disparity-computation-optimization"><span class="nav-text">3. Disparity computation&#x2F;optimization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Disparity-refinement"><span class="nav-text">4. Disparity refinement</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充"><span class="nav-text">补充</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Xinjie"
+      src="/images/dog.png">
+  <p class="site-author-name" itemprop="name">Xinjie</p>
+  <div class="site-description" itemprop="description">欢迎访问我的技术博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/XinjieInformatik" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;XinjieInformatik" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+      
+      <!--
+      <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=427606780&auto=1&height=66"></iframe>
+      -->
+      <div id="">
+      <canvas id="canvas" style="width:60%;">
+      </div>
+      <script type="text/javascript" src="/js/canvas-dance-time.js"></script>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+  
+
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div id="days"></div>
+<script>
+function show_date_time(){
+    window.setTimeout("show_date_time()", 1000);
+    BirthDay=new Date("09/09/2020 08:13:14");//修改为自己的blog建站时间
+    today=new Date();
+    timeold=(today.getTime()-BirthDay.getTime());
+    sectimeold=timeold/1000
+    secondsold=Math.floor(sectimeold);
+    msPerDay=24*60*60*1000
+    e_daysold=timeold/msPerDay
+    daysold=Math.floor(e_daysold);
+    e_hrsold=(e_daysold-daysold)*24;
+    hrsold=setzero(Math.floor(e_hrsold));
+    e_minsold=(e_hrsold-hrsold)*60;
+    minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+    seconds=setzero(Math.floor((e_minsold-minsold)*60));
+    document.getElementById('days').innerHTML="本站已安全运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+function setzero(i){
+    if (i<10)
+    {i="0" + i};
+    return i;
+}
+show_date_time();
+</script>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xinjie</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">77k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:10</span>
+</div>
+<!--
+--!>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://xinjieinformatik.github.io/2020/09/27/stereo-vision/',]
+      });
+      });
+  </script>
+ 
+  
+
+  <script async src="/js/cursor.js"></script> 
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'a054acd527b7f50a7920',
+      clientSecret: '2f3218b7d2f9dd1ed5ccd36593a3572a9c4d28d3',
+      repo        : 'gitalks_comments',
+      owner       : 'XinjieInformatik',
+      admin       : ['XinjieInformatik'],
+      id          : 'f2cc833505910be1272060dd45803707',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

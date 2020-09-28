@@ -6,7 +6,7 @@
   <link href="https://xinjieinformatik.github.io/atom.xml" rel="self"/>
   
   <link href="https://xinjieinformatik.github.io/"/>
-  <updated>2020-09-28T04:27:47.740Z</updated>
+  <updated>2020-09-28T11:11:28.594Z</updated>
   <id>https://xinjieinformatik.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>fourier-transform</title>
+    <link href="https://xinjieinformatik.github.io/2020/09/28/fourier-transform/"/>
+    <id>https://xinjieinformatik.github.io/2020/09/28/fourier-transform/</id>
+    <published>2020-09-28T11:04:14.000Z</published>
+    <updated>2020-09-28T11:11:28.594Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="傅里叶变换"><a href="#傅里叶变换" class="headerlink" title="傅里叶变换"></a>傅里叶变换</h1><p>傅里叶变换在信号处理领域是非常重要的知识点，通过傅里叶变换可以把信号从时域转换到频域，处理后在反变化回时域。经典操作有高通滤波等。在这篇blog中，稍微总结下很基础的东西。</p><a id="more"></a><p>参考：<a href="https://www.youtube.com/watch?v=0LuyxzqI3Hk&amp;vl=zh-Hans">https://www.youtube.com/watch?v=0LuyxzqI3Hk&amp;vl=zh-Hans</a></p><p>知识补充：欧拉公式</p><script type="math/tex; mode=display">\cos x + i \sin x = e^{ix}</script><p>x = wt -&gt; $e^{iwt}$ 在圆上逆时针旋转</p><p>时域 -&gt; 频域</p><p>时域: 信号随时间的变化, t, f(t)<br>频域：在不同频率下每个信号的大小，频率w，振幅F(f)，相位</p><h3 id="傅里叶级数"><a href="#傅里叶级数" class="headerlink" title="傅里叶级数"></a>傅里叶级数</h3><p>任何一个周期性函数都可以变成正余弦函数（视为正交基）的和，正余弦也可以变化为周期性函数。周期性函数在频域上变成几条线<br>任何一个周期性函数都可以写成</p><script type="math/tex; mode=display">f(t) = a_0/2 + \sum_{n=1}^\infty (a_n \sin(nwt) + b_n \cos(nwt))</script><p>因此有三个标准正交基 1, sin(nwt), cos(nwt)</p><h3 id="连续-傅里叶变换"><a href="#连续-傅里叶变换" class="headerlink" title="(连续)傅里叶变换"></a>(连续)傅里叶变换</h3><p>非周期性函数在频域上是连续的<br>用傅里叶变化把每个w成分挑选出来</p><script type="math/tex; mode=display">F_T = \int_{-\infty}^{+\infty}f(t)e^{-jwt}dt</script><p>如果信号不含w FT=0，含w FT!=0<br>逆变换</p><script type="math/tex; mode=display">f(t) = \int_{-\infty}^{+\infty}F_T(w)e^{jwt}dw</script><p>在图像上，横坐标是空间位置。</p><h3 id="离散傅里叶变换"><a href="#离散傅里叶变换" class="headerlink" title="离散傅里叶变换"></a>离散傅里叶变换</h3><p><a href="https://zh.wikipedia.org/wiki/%E7%A6%BB%E6%95%A3%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2">https://zh.wikipedia.org/wiki/%E7%A6%BB%E6%95%A3%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2</a></p><h3 id="快速傅里叶变换"><a href="#快速傅里叶变换" class="headerlink" title="快速傅里叶变换"></a>快速傅里叶变换</h3><p>多项式计算O(n^2)加速到O(nlogn),用分治的思想</p><p><a href="https://github.com/lushangzong/FFT/blob/master/python.py">https://github.com/lushangzong/FFT/blob/master/python.py</a><br><a href="https://github.com/privateEye-zzy/Fourier_Transform/blob/f1c0fdf697237a7e60a0b2722b1a440d9841f9d9/Big_integer_multiply.py">https://github.com/privateEye-zzy/Fourier_Transform/blob/f1c0fdf697237a7e60a0b2722b1a440d9841f9d9/Big_integer_multiply.py</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;傅里叶变换&quot;&gt;&lt;a href=&quot;#傅里叶变换&quot; class=&quot;headerlink&quot; title=&quot;傅里叶变换&quot;&gt;&lt;/a&gt;傅里叶变换&lt;/h1&gt;&lt;p&gt;傅里叶变换在信号处理领域是非常重要的知识点，通过傅里叶变换可以把信号从时域转换到频域，处理后在反变化回时域。经典操作有高通滤波等。在这篇blog中，稍微总结下很基础的东西。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计算机视觉" scheme="https://xinjieinformatik.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/"/>
+    
+    
+    <category term="傅里叶变换" scheme="https://xinjieinformatik.github.io/tags/%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2/"/>
+    
+  </entry>
   
   <entry>
     <title>SVM</title>
